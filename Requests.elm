@@ -1,9 +1,12 @@
 module Requests exposing (..)
 
+import Task
 import Model exposing (..)
 import Http exposing (..)
-import Task
 import Json.Decode as Json exposing (..)
+import Model exposing (..)
+import Messages exposing (..)
+import Utils exposing (..)
 
 companyList: (Http.Error -> a) -> (List Company -> a) -> Cmd a
 companyList errorType successType = 
@@ -13,15 +16,23 @@ companyList errorType successType =
   in 
     Task.perform errorType successType <| send
 
-companyAdd : String -> String -> String -> String -> String -> (Http.RawError -> a) -> (Http.Response -> a) -> Cmd a
-companyAdd session name lat lon postcode fail succeed = 
-  let body = Http.string ("""{"name":"""++toString name++""", "lat": """++lat++""", "lon":"""++lon++""", "postcode":"""++toString postcode++""", "technologies": []}""")
+fetchCompanies : Cmd Msg
+fetchCompanies = companyList (Error >> CompanyListResponse) (ValueResponse >> CompanyListResponse)
+
+
+companyAdd : String -> CompanyInputModel -> (Http.RawError -> a) -> (Http.Response -> a) -> Cmd a
+companyAdd session d fail succeed = 
+  let body = Http.string ("""{"name":"""++toString d.name++""", "lat": """++d.lat++""", "lon":"""++d.lon++""", "postcode":"""++toString d.postcode++""", "technologies": []}""")
       url  = "http://localhost:8901/company/insert"
       hs   = [ ("Content-Type", "application/json"), ("session", session) ]
       req  = Http.Request "POST" hs url body
       send = Http.send Http.defaultSettings req 
   in
     Task.perform fail succeed <| send
+
+addCompany : String -> CompanyInputModel -> Cmd Msg
+addCompany = \sess input -> companyAdd sess input (RawError >> CompanyAddResponse) (RawResponse >> CompanyAddResponse)
+
 
 companyDel : String -> String -> (Http.RawError -> a) -> (Http.Response -> a) -> Cmd a
 companyDel session id fail succeed = 
@@ -31,6 +42,9 @@ companyDel session id fail succeed =
       send = Http.send Http.defaultSettings req 
   in
     Task.perform fail succeed send
+
+delCompany : String -> String -> Cmd Msg
+delCompany = \sess id -> companyDel sess id (RawError >> CompanyDelResponse) (RawResponse >> CompanyDelResponse)
 
 
 techAdd : String -> (Http.RawError -> a) -> (Http.Response -> a) -> Cmd a
@@ -43,13 +57,19 @@ techAdd session fail succeed =
   in
     Task.perform fail succeed <| send
 
-login : String -> String -> (Http.Error -> a) -> (String -> a) -> Cmd a
-login u p fail succeed=
-  let body = Http.string ("""{"username":"""++toString u++""", "password": """++toString p++""", "email":""}""")
+addTech: String -> Cmd Msg
+addTech = \sess -> techAdd sess (RawError >> TechAddResponse) (RawResponse >> TechAddResponse)
+
+
+login : LoginInputModel -> (Http.Error -> a) -> (String -> a) -> Cmd a
+login d fail succeed=
+  let body = Http.string ("""{"username":"""++toString d.username++""", "password": """++toString d.password++""", "email":""}""")
       url  = "http://localhost:8901/login"
       hs   = [ ("Content-Type", "application/json"), ("Accept", "application/json") ]
       req  = Http.Request "POST" hs url body
       send = Http.send Http.defaultSettings req
   in
     Task.perform fail succeed <| Http.fromJson ("session" := Json.string) send
+
+loginFn = \input -> login input (Error >> LoginResponse) (ValueResponse >> LoginResponse)
 

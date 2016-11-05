@@ -2,12 +2,13 @@ module Main exposing (..)
 
 import Html exposing (Html, div, p)
 import Html.App
-import Requests exposing (..)
-import Messages exposing (..)
-import Model exposing (..)
-import Views exposing (..)
 import Http exposing (..)
 import Utils exposing (..)
+import Messages exposing (..)
+import Model exposing (..)
+import ModelUpdaters exposing (..)
+import Requests exposing (..)
+import Views exposing (..)
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg m = 
@@ -15,43 +16,29 @@ update msg m =
       ignore         = (m, Cmd.none)
       onlyFn f       = (m, f)
       onlyModel mo   = (mo, Cmd.none)
-      fetchCompanies = companyList CompanyListFetchFail CompanyListFetchSucceed
-      addCompany     = companyAdd m.session m.name m.lat m.lon m.postcode CompanyAddNetworkFail CompanyAddResponse 
-      delCompany     = \id -> companyDel m.session id CompanyDelFail CompanyDelSucceed
-      loginFn        = login m.username m.password LoginFail LoginSucceed
-      addTech        = techAdd m.session TechAddNetworkFail TechAddResponse
+  
   in case msg of
+    LoginInput input          -> loginInputUpdate input m.loginInput m |> onlyModel
+    LoginPress                -> loginFn m.loginInput |> onlyFn
+    LoginResponse resp        -> loginUpdate resp m
 
-    LoginUsername s           -> { m | username = s } |> onlyModel
-    LoginPassword s           -> { m | password = s } |> onlyModel
-    Login                     -> loginFn |> onlyFn
-    LoginFail s               -> ignore
-    LoginSucceed s            -> { m | session = s }  |> onlyModel
+    CompanyInput input        -> companyInputUpdate input m.companyInput m |> onlyModel
+    CompanyAddPress           -> addCompany m.session m.companyInput |> onlyFn
+    CompanyAddResponse resp   -> companyAddUpdate resp m
 
-    CompanyName s             -> { m | name = s }     |> onlyModel
-    CompanyLat s              -> { m | lat = s }      |> onlyModel
-    CompanyLon s              -> { m | lon = s }      |> onlyModel
-    CompanyPostcode s         -> { m | postcode = s } |> onlyModel
-    CompanyAdd                -> addCompany |> onlyFn
-    CompanyAddNetworkFail _   -> ignore
-    CompanyAddResponse r      -> httpResponse r (\_ -> fetchCompanies |> onlyFn) (\_ -> ignore)
+    CompanyListResponse resp  -> companiesUpdate resp m
 
-    CompanyDel id             -> delCompany id  |> onlyFn
-    CompanyDelFail _          -> ignore
-    CompanyDelSucceed _       -> fetchCompanies |> onlyFn
+    CompanyDel id             -> delCompany m.session id  |> onlyFn
+    CompanyDelResponse resp   -> companyDelUpdate resp m
 
-    CompanyListFetchFail _    -> ignore
-    CompanyListFetchSucceed s -> { m | companies = s } |> onlyModel
-
-    TechAdd k                 -> onEnter k (\_ -> addTech |> onlyFn) (\_ -> ignore )
-    TechAddNetworkFail _      -> ignore
-    TechAddResponse resp      -> httpResponse resp (\_ -> ignore) (\_ -> ignore) 
+    TechAdd k                 -> onEnter k (\_ -> addTech m.session |> onlyFn) (\_ -> ignore)
+    TechAddResponse resp      -> techAddUpdate resp m
 
 -- Subs and main
 
 init : (Model, Cmd Msg)
 init = 
-  (initModel, companyList CompanyListFetchFail CompanyListFetchSucceed)
+  (initModel, fetchCompanies)
     
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -60,8 +47,8 @@ subscriptions model =
 main : Program Never
 main =
   Html.App.program
-      { init = init
-      , view = view
-      , update = update
-      , subscriptions = subscriptions
-      }
+    { init = init
+    , view = view
+    , update = update
+    , subscriptions = subscriptions
+    }

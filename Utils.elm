@@ -15,3 +15,12 @@ onEnter key enter otherwise =
      enter ()
    else
      otherwise ()
+
+type RawHttp =
+  RawError Http.RawError
+  | RawResponse Http.Response
+      
+type ResponseHttp a =
+  Error Http.Error
+  | ValueResponse a
+

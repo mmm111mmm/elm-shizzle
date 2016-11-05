@@ -1,35 +1,32 @@
 module Messages exposing (..)
 
 import Model exposing (..)
-import Http exposing (..)
+import Utils exposing (..)
+
+type LoginInputData = 
+  Username String
+  | Password String
+
+type CompanyInputData = 
+  Name String
+  | Lat String
+  | Lon String
+  | Postcode String
 
 type Msg = 
-  -- company list
-    CompanyListFetchFail Http.Error 
-  | CompanyListFetchSucceed (List Company)
+  -- login
+    LoginPress
+  | LoginInput LoginInputData
+  | LoginResponse (ResponseHttp String)
   -- company add
-  | CompanyAdd
-  | CompanyName String 
-  | CompanyLat String 
-  | CompanyLon String 
-  | CompanyPostcode String 
-  | CompanyAddNetworkFail Http.RawError
-  | CompanyAddResponse Http.Response
+  | CompanyAddPress
+  | CompanyInput CompanyInputData
+  | CompanyAddResponse RawHttp
+  -- company list
+  | CompanyListResponse (ResponseHttp (List Company))
   -- company del
   | CompanyDel String
-  | CompanyDelFail Http.RawError
-  | CompanyDelSucceed Http.Response
+  | CompanyDelResponse RawHttp
   -- tech add
   | TechAdd Int
-  | TechAddNetworkFail Http.RawError
-  | TechAddResponse Http.Response
-  -- login
-  | Login
-  | LoginUsername String
-  | LoginPassword String
-  | LoginFail Http.Error
-  | LoginSucceed String
-
-
-
-
+  | TechAddResponse RawHttp

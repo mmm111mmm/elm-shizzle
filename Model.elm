@@ -2,27 +2,53 @@ module Model exposing (..)
 
 import Json.Decode as Json exposing (..)
 
-type alias Model = {
-  session: String 
-  -- login
-  , username: String
-  , password: String
-  -- company stuff
-  , name: String
+-- login
+
+type alias LoginInputModel = {
+  username : String
+  , password : String
+}
+
+initLoginInputModel = LoginInputModel "" "" 
+
+-- company add
+
+type alias CompanyInputModel = {
+  name: String
   , lat: String
   , lon: String 
   , postcode: String 
-  , companies: List Company
-  -- misc
-  , res : String
-  }
+}
 
-initModel = Model "" "" "" "" "" "" "" [] ""
+initCompanyInputModel = CompanyInputModel "" "" "" ""
+
+-- overall
+
+type alias Model = {
+  session:        String 
+  , loginInput:   LoginInputModel
+  , companyInput: CompanyInputModel 
+  , companies:    List Company
+  , res:          String
+}
+
+initModel = Model "" initLoginInputModel initCompanyInputModel [] ""
 
 -- json stuff
 
-type alias Technology = {id: String, name: String}
-type alias Company = {id: String, name: String, lat: String, lon: String, postcode: String, technologies: Maybe (List Technology)}
+type alias Company = {
+  id: String
+  , name: String
+  , lat: String
+  , lon: String
+  , postcode: String
+  , technologies: Maybe (List Technology)
+}
+
+type alias Technology = {
+  id: String
+  , name: String
+}
 
 decodeCompanies : Json.Decoder (List Company)
 decodeCompanies = 
