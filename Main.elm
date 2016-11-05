@@ -2,41 +2,34 @@ module Main exposing (..)
 
 import Html exposing (Html, div, p)
 import Html.App
-import Http exposing (..)
-import Utils exposing (..)
-import Messages exposing (..)
-import Model exposing (..)
-import ModelUpdaters exposing (..)
-import Requests exposing (..)
-import Views exposing (..)
+import Messages exposing (Msg(..))
+import Model exposing (Model, initModel)
+import ModelUpdaters exposing (loginUpdate, companyAddUpdate, companiesUpdate, companyDelUpdate, techAddUpdate)
+import Views exposing (view)
+import Requests exposing (fetchCompanies)
 
 update : Msg -> Model -> ( Model, Cmd Msg )
-update msg m = 
-  let _ = Debug.log "msg" msg
-      ignore         = (m, Cmd.none)
-      onlyFn f       = (m, f)
-      onlyModel mo   = (mo, Cmd.none)
-  
-  in case msg of
-    LoginAndResponse input    -> loginInputResponseUpdate input m.loginInput m
+update msg model =
+  let
+     _ = Debug.log "msg" msg
+  in 
+    case msg of
+      LoginAndResponse msg      -> loginUpdate msg model.loginInput model
 
-    CompanyInput input        -> companyInputUpdate input m.companyInput m
-    CompanyAddResponse resp   -> companyAddUpdate resp m
+      CompanyAddAndResponse msg -> companyAddUpdate msg model.companyInput model
 
-    CompanyListResponse resp  -> companiesUpdate resp m
+      CompanyListResponse msg   -> companiesUpdate msg model
 
-    CompanyDel id             -> delCompany m.session id  |> onlyFn
-    CompanyDelResponse resp   -> companyDelUpdate resp m
+      CompanyDelAndResponse msg -> companyDelUpdate msg model
 
-    TechAdd k                 -> onEnter k (\_ -> addTech m.session |> onlyFn) (\_ -> ignore)
-    TechAddResponse resp      -> techAddUpdate resp m
+      TechAddAndResponse msg    -> techAddUpdate msg model
 
 -- Subs and main
 
 init : (Model, Cmd Msg)
-init = 
+init =
   (initModel, fetchCompanies)
-    
+
 subscriptions : Model -> Sub Msg
 subscriptions model =
   Sub.none

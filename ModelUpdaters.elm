@@ -5,14 +5,22 @@ import Messages exposing (..)
 import Requests exposing (..)
 import Utils exposing (..) 
 
-loginInputResponseUpdate : InputAndResponse (InputAndPress LoginInputData) (ResponseHttp String)
-                           -> LoginInputModel 
-                           -> Model 
-                           -> (Model, Cmd Msg)
-loginInputResponseUpdate input m model =
+
+companiesUpdate : ResponseHttp (List Company) -> Model -> (Model, Cmd Msg)
+companiesUpdate input model =
+  case input of
+    Error e         -> ( model, Cmd.none )
+    ValueResponse c -> ( { model | companies = c }, Cmd.none ) 
+
+
+loginUpdate : InputAndResponse (InputAndPress LoginInputData) (ResponseHttp String)
+              -> LoginInputModel 
+              -> Model 
+              -> (Model, Cmd Msg)
+loginUpdate input m model =
   case input of
     IR_Input i    -> loginInputUpdate i m model
-    IR_Response r -> loginUpdate r model 
+    IR_Response r -> loginResponseUpdate r model 
 
 loginInputUpdate : InputAndPress LoginInputData -> LoginInputModel -> Model -> (Model, Cmd Msg)
 loginInputUpdate input m model =
@@ -29,12 +37,21 @@ loginInputModelUpdate input m model =
   in 
     { model | loginInput = mod }
 
-loginUpdate : ResponseHttp String -> Model -> (Model, Cmd Msg)
-loginUpdate input m =
+loginResponseUpdate : ResponseHttp String -> Model -> (Model, Cmd Msg)
+loginResponseUpdate input model =
   case input of
-    Error e         -> ( m, Cmd.none )
-    ValueResponse s -> ( { m | session = s }, Cmd.none ) 
+    Error e         -> ( model, Cmd.none )
+    ValueResponse s -> ( { model | session = s }, Cmd.none ) 
 
+
+companyAddUpdate : InputAndResponse (InputAndPress CompanyInputData) RawHttp
+                   -> CompanyInputModel 
+                   -> Model 
+                   -> (Model, Cmd Msg)
+companyAddUpdate input m model =
+  case input of
+    IR_Input i    -> companyInputUpdate i m model
+    IR_Response r -> companyAddResponseUpdate r model 
 
 companyInputUpdate : InputAndPress CompanyInputData -> CompanyInputModel -> Model -> (Model, Cmd Msg)
 companyInputUpdate input m model =
@@ -53,30 +70,34 @@ companyInputModelUpdate input m model =
   in 
     { model | companyInput = mod }
 
-companyAddUpdate : RawHttp -> Model -> (Model, Cmd Msg)
-companyAddUpdate input m =
+companyAddResponseUpdate : RawHttp -> Model -> (Model, Cmd Msg)
+companyAddResponseUpdate input model =
+  case input of
+    RawError e    -> (model, Cmd.none)
+    RawResponse r -> httpResponse r (\_ -> (model, fetchCompanies) ) (\_ -> (model, Cmd.none) )
+
+
+companyDelUpdate : InputAndResponse String RawHttp -> Model -> (Model, Cmd Msg)
+companyDelUpdate input model =
+  case input of
+    IR_Input id   -> ( model, delCompany model.session id )
+    IR_Response r -> companyDelResponseUpdate r model
+
+companyDelResponseUpdate : RawHttp -> Model -> (Model, Cmd Msg)
+companyDelResponseUpdate input m =
   case input of
     RawError e    -> (m, Cmd.none)
     RawResponse r -> httpResponse r (\_ -> (m, fetchCompanies) ) (\_ -> (m, Cmd.none) )
 
 
-companiesUpdate : ResponseHttp (List Company) -> Model -> (Model, Cmd Msg)
-companiesUpdate input m =
+techAddUpdate : InputAndResponse Int RawHttp -> Model -> (Model, Cmd Msg)
+techAddUpdate input model =
   case input of
-    Error e         -> ( m, Cmd.none )
-    ValueResponse c -> ( { m | companies = c }, Cmd.none ) 
+    IR_Input k    -> onEnter k (\_ -> (model, addTech model.session) ) (\_ -> (model, Cmd.none) )
+    IR_Response r -> techAddResponseUpdate r model
 
-
-companyDelUpdate : RawHttp -> Model -> (Model, Cmd Msg)
-companyDelUpdate input m =
+techAddResponseUpdate : RawHttp -> Model -> (Model, Cmd Msg)
+techAddResponseUpdate input model =
   case input of
-    RawError e    -> (m, Cmd.none)
-    RawResponse r -> httpResponse r (\_ -> (m, fetchCompanies) ) (\_ -> (m, Cmd.none) )
-
-
-techAddUpdate : RawHttp -> Model -> (Model, Cmd Msg)
-techAddUpdate input m =
-  case input of
-    RawError e    -> (m, Cmd.none)
-    RawResponse r -> httpResponse r (\_ -> (m, Cmd.none) ) (\_ -> (m, Cmd.none) )
-
+    RawError e    -> (model, Cmd.none)
+    RawResponse r -> httpResponse r (\_ -> (model, fetchCompanies) ) (\_ -> (model, Cmd.none) )

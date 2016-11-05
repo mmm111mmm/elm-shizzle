@@ -3,31 +3,23 @@ module Messages exposing (..)
 import Model exposing (..)
 import Utils exposing (..)
 
-type LoginInputData = 
+type LoginInputData =
   Username String
   | Password String
 
-type CompanyInputData = 
+type CompanyInputData =
   Name String
   | Lat String
   | Lon String
   | Postcode String
 
-type InputAndResponse a b =
-  IR_Input a
-  | IR_Response b
-
-type Msg = 
-  -- login
+type Msg =
   LoginAndResponse (InputAndResponse (InputAndPress LoginInputData) (ResponseHttp String))
-  -- company add
-  | CompanyInput (InputAndPress CompanyInputData)
-  | CompanyAddResponse RawHttp
-  -- company list
+
+  | CompanyAddAndResponse (InputAndResponse (InputAndPress CompanyInputData) RawHttp)
+
   | CompanyListResponse (ResponseHttp (List Company))
-  -- company del
-  | CompanyDel String
-  | CompanyDelResponse RawHttp
-  -- tech add
-  | TechAdd Int
-  | TechAddResponse RawHttp
+
+  | CompanyDelAndResponse (InputAndResponse String RawHttp)
+
+  | TechAddAndResponse (InputAndResponse Int RawHttp)

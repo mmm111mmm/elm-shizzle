@@ -50,7 +50,7 @@ renderCompany companies =
 
 renderCompanyDel : String -> Html Msg
 renderCompanyDel id = 
-    span [ style [("cursor", "pointer")], onClick (CompanyDel id) ] [ text " del" ]
+    span [ style [("cursor", "pointer")], onClick (id |> IR_Input >> CompanyDelAndResponse) ] [ text " del" ]
 
 renderTech : Maybe (List Technology) -> Html Msg
 renderTech ts = 
@@ -65,7 +65,7 @@ renderTech ts =
 
 renderTechInput: Html Msg
 renderTechInput = 
-    input [placeholder "tech", ( on "keyup" (Json.map TechAdd keyCode) ) ] []
+    input [placeholder "tech", ( on "keyup" (Json.map (\i -> i |> IR_Input >> TechAddAndResponse) keyCode) ) ] []
 
 
 renderCompanyAdd: Html Msg
@@ -73,19 +73,19 @@ renderCompanyAdd =
   div [] [
       div []  
           [ 
-            input [ onInput (Name >> Input >> CompanyInput), placeholder "Name"] []
+            input [ onInput (Name >> Input >> IR_Input >> CompanyAddAndResponse), placeholder "Name"] []
           ]
       , div []  
           [ 
-            input [ onInput (Lat >> Input >> CompanyInput), placeholder "lat"] []
+            input [ onInput (Lat >> Input >> IR_Input >> CompanyAddAndResponse), placeholder "lat"] []
           ]
       , div []  
           [ 
-            input [ onInput (Lon >> Input >> CompanyInput), placeholder "lon"] []
+            input [ onInput (Lon >> Input >> IR_Input >> CompanyAddAndResponse), placeholder "lon"] []
           ]
       , div []  
           [ 
-            input [ onInput (Postcode >> Input >> CompanyInput), placeholder "postcode"] []
+            input [ onInput (Postcode >> Input >> IR_Input >> CompanyAddAndResponse), placeholder "postcode"] []
          ]
-      , button [ onClick (Press |> CompanyInput)] [ text "Add company" ] 
+      , button [ onClick (Press |> IR_Input >> CompanyAddAndResponse)] [ text "Add company" ] 
       ]
