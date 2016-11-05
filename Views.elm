@@ -29,13 +29,13 @@ renderLogin session =
     div [] [
         div []  
             [ 
-              input [ placeholder "Username", onInput (Username >> LoginInput)] []
+              input [ placeholder "Username", onInput (Username >> Input >> LoginInput)] []
             ]
         , div []  
             [ 
-              input [ placeholder "Password", onInput (Password >> LoginInput)] []
+              input [ placeholder "Password", onInput (Password >> Input >> LoginInput)] []
             ]
-        , button [ onClick LoginPress ] [ text "Login" ] 
+        , button [ onClick (Press |> LoginInput) ] [ text "Login" ] 
         ]
 
 renderCompany : List Company -> Html Msg
@@ -72,19 +72,19 @@ renderCompanyAdd =
   div [] [
       div []  
           [ 
-            input [ onInput (Name >> CompanyInput), placeholder "Name"] []
+            input [ onInput (Name >> Input >> CompanyInput), placeholder "Name"] []
           ]
       , div []  
           [ 
-            input [ onInput (Lat >> CompanyInput), placeholder "lat"] []
+            input [ onInput (Lat >> Input >> CompanyInput), placeholder "lat"] []
           ]
       , div []  
           [ 
-            input [ onInput (Lon >> CompanyInput), placeholder "lon"] []
+            input [ onInput (Lon >> Input >> CompanyInput), placeholder "lon"] []
           ]
       , div []  
           [ 
-            input [ onInput (Postcode >> CompanyInput), placeholder "postcode"] []
-          ]
-      , button [ onClick CompanyAddPress ] [ text "Add company" ] 
+            input [ onInput (Postcode >> Input >> CompanyInput), placeholder "postcode"] []
+         ]
+      , button [ onClick (Press |> CompanyInput)] [ text "Add company" ] 
       ]

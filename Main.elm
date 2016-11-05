@@ -18,12 +18,10 @@ update msg m =
       onlyModel mo   = (mo, Cmd.none)
   
   in case msg of
-    LoginInput input          -> loginInputUpdate input m.loginInput m |> onlyModel
-    LoginPress                -> loginFn m.loginInput |> onlyFn
+    LoginInput input          -> loginInputUpdate input m.loginInput m
     LoginResponse resp        -> loginUpdate resp m
 
-    CompanyInput input        -> companyInputUpdate input m.companyInput m |> onlyModel
-    CompanyAddPress           -> addCompany m.session m.companyInput |> onlyFn
+    CompanyInput input        -> companyInputUpdate input m.companyInput m
     CompanyAddResponse resp   -> companyAddUpdate resp m
 
     CompanyListResponse resp  -> companiesUpdate resp m

@@ -15,12 +15,10 @@ type CompanyInputData =
 
 type Msg = 
   -- login
-    LoginPress
-  | LoginInput LoginInputData
+    LoginInput (InputAndPress LoginInputData)
   | LoginResponse (ResponseHttp String)
   -- company add
-  | CompanyAddPress
-  | CompanyInput CompanyInputData
+  | CompanyInput (InputAndPress CompanyInputData)
   | CompanyAddResponse RawHttp
   -- company list
   | CompanyListResponse (ResponseHttp (List Company))

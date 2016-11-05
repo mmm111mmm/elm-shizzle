@@ -24,3 +24,7 @@ type ResponseHttp a =
   Error Http.Error
   | ValueResponse a
 
+type InputAndPress a =
+  Press
+  | Input a 
+
