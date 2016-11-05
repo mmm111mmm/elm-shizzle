@@ -8,6 +8,7 @@ import Model exposing (..)
 import Messages exposing (..)
 import Json.Decode as Json
 import Model exposing (..)
+import Utils exposing (..)
 
 view : Model -> Html Msg
 view model =  
