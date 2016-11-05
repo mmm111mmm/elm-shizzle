@@ -32,8 +32,8 @@ companyAdd session d fail succeed =
 
 addCompany : String -> CompanyInputModel -> Cmd Msg
 addCompany = \sess input -> companyAdd sess input 
-  (RawError >> IR_Response >> CompanyAddAndResponse) 
-  (RawResponse >> IR_Response >> CompanyAddAndResponse)
+  (RawError >> CompanyAddResponse) 
+  (RawResponse >> CompanyAddResponse)
 
 
 companyDel : String -> String -> (Http.RawError -> a) -> (Http.Response -> a) -> Cmd a
@@ -47,8 +47,8 @@ companyDel session id fail succeed =
 
 delCompany : String -> String -> Cmd Msg
 delCompany = \sess id -> companyDel sess id 
-  (RawError >> IR_Response >> CompanyDelAndResponse) 
-  (RawResponse >> IR_Response >> CompanyDelAndResponse)
+  (RawError >> CompanyDelResponse) 
+  (RawResponse >> CompanyDelResponse)
 
 
 techAdd : String -> (Http.RawError -> a) -> (Http.Response -> a) -> Cmd a
@@ -63,8 +63,8 @@ techAdd session fail succeed =
 
 addTech: String -> Cmd Msg
 addTech = \sess -> techAdd sess 
-  (RawError >> IR_Response >> TechAddAndResponse) 
-  (RawResponse >> IR_Response >> TechAddAndResponse)
+  (RawError >> TechAddResponse) 
+  (RawResponse >> TechAddResponse)
 
 
 login : LoginInputModel -> (Http.Error -> a) -> (String -> a) -> Cmd a
@@ -77,4 +77,4 @@ login d fail succeed=
   in
     Task.perform fail succeed <| Http.fromJson ("session" := Json.string) send
 
-loginFn = \input -> login input (Error >> IR_Response >> LoginAndResponse) (ValueResponse >> IR_Response >> LoginAndResponse)
+loginFn = \input -> login input (Error >> LoginResponse) (ValueResponse >> LoginResponse)

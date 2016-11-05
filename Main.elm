@@ -4,9 +4,14 @@ import Html exposing (Html, div, p)
 import Html.App
 import Messages exposing (Msg(..))
 import Model exposing (Model, initModel)
-import ModelUpdaters exposing (loginUpdate, companyAddUpdate, companiesUpdate, companyDelUpdate, techAddUpdate)
 import Views exposing (view)
 import Requests exposing (fetchCompanies)
+
+import Updaters.Login exposing (loginUpdate, loginResponseUpdate)
+import Updaters.CompanyAdd exposing (companyAddUpdate, companyAddResponseUpdate)
+import Updaters.CompanyDel exposing (companyDelUpdate, companyDelResponseUpdate)
+import Updaters.TechAdd exposing (techAddUpdate, techAddResponseUpdate)
+import Updaters.CompanyList exposing (companiesUpdate)
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -14,15 +19,19 @@ update msg model =
      _ = Debug.log "msg" msg
   in 
     case msg of
-      LoginAndResponse msg      -> loginUpdate msg model.loginInput model
+      Login msg                 -> loginUpdate msg model.loginInput model
+      LoginResponse msg         -> loginResponseUpdate msg model
 
-      CompanyAddAndResponse msg -> companyAddUpdate msg model.companyInput model
+      CompanyAdd msg            -> companyAddUpdate msg model.companyInput model
+      CompanyAddResponse msg    -> companyAddResponseUpdate msg model
+
+      CompanyDel msg            -> companyDelUpdate msg model
+      CompanyDelResponse msg    -> companyDelResponseUpdate msg model
+
+      TechAdd msg               -> techAddUpdate msg model
+      TechAddResponse msg       -> techAddResponseUpdate msg model
 
       CompanyListResponse msg   -> companiesUpdate msg model
-
-      CompanyDelAndResponse msg -> companyDelUpdate msg model
-
-      TechAddAndResponse msg    -> techAddUpdate msg model
 
 -- Subs and main
 

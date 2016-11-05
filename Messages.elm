@@ -6,20 +6,27 @@ import Utils exposing (..)
 type LoginInputData =
   Username String
   | Password String
+  | LoginPress
 
 type CompanyInputData =
   Name String
   | Lat String
   | Lon String
   | Postcode String
+  | CompanyAddPress
 
 type Msg =
-  LoginAndResponse (InputAndResponse (InputAndPress LoginInputData) (ResponseHttp String))
 
-  | CompanyAddAndResponse (InputAndResponse (InputAndPress CompanyInputData) RawHttp)
+    Login LoginInputData 
+  | LoginResponse (ResponseHttp String)
+
+  | CompanyAdd CompanyInputData
+  | CompanyAddResponse RawHttp
+
+  | CompanyDel String 
+  | CompanyDelResponse RawHttp
+
+  | TechAdd Int 
+  | TechAddResponse RawHttp
 
   | CompanyListResponse (ResponseHttp (List Company))
-
-  | CompanyDelAndResponse (InputAndResponse String RawHttp)
-
-  | TechAddAndResponse (InputAndResponse Int RawHttp)

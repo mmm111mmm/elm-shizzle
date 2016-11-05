@@ -30,13 +30,13 @@ renderLogin session =
     div [] [
         div []  
             [ 
-              input [ placeholder "Username", onInput (Username >> Input >> IR_Input >> LoginAndResponse) ] []
+              input [ placeholder "Username", onInput (Username >> Login) ] []
             ]
         , div []  
             [ 
-              input [ placeholder "Password", onInput (Password >> Input >> IR_Input >> LoginAndResponse) ] []
+              input [ placeholder "Password", onInput (Password >> Login) ] []
             ]
-        , button [ onClick (Press |> IR_Input >> LoginAndResponse) ] [ text "Login" ] 
+        , button [ onClick (LoginPress |> Login) ] [ text "Login" ] 
         ]
 
 renderCompany : List Company -> Html Msg
@@ -50,7 +50,7 @@ renderCompany companies =
 
 renderCompanyDel : String -> Html Msg
 renderCompanyDel id = 
-    span [ style [("cursor", "pointer")], onClick (id |> IR_Input >> CompanyDelAndResponse) ] [ text " del" ]
+    span [ style [("cursor", "pointer")], onClick (id |> CompanyDel) ] [ text " del" ]
 
 renderTech : Maybe (List Technology) -> Html Msg
 renderTech ts = 
@@ -65,7 +65,7 @@ renderTech ts =
 
 renderTechInput: Html Msg
 renderTechInput = 
-    input [placeholder "tech", ( on "keyup" (Json.map (\i -> i |> IR_Input >> TechAddAndResponse) keyCode) ) ] []
+    input [placeholder "tech", ( on "keyup" (Json.map (\i -> i |> TechAdd) keyCode) ) ] []
 
 
 renderCompanyAdd: Html Msg
@@ -73,19 +73,19 @@ renderCompanyAdd =
   div [] [
       div []  
           [ 
-            input [ onInput (Name >> Input >> IR_Input >> CompanyAddAndResponse), placeholder "Name"] []
+            input [ onInput (Name >> CompanyAdd), placeholder "Name"] []
           ]
       , div []  
           [ 
-            input [ onInput (Lat >> Input >> IR_Input >> CompanyAddAndResponse), placeholder "lat"] []
+            input [ onInput (Lat >> CompanyAdd), placeholder "lat"] []
           ]
       , div []  
           [ 
-            input [ onInput (Lon >> Input >> IR_Input >> CompanyAddAndResponse), placeholder "lon"] []
+            input [ onInput (Lon >> CompanyAdd), placeholder "lon"] []
           ]
       , div []  
           [ 
-            input [ onInput (Postcode >> Input >> IR_Input >> CompanyAddAndResponse), placeholder "postcode"] []
+            input [ onInput (Postcode >> CompanyAdd), placeholder "postcode" ] []
          ]
-      , button [ onClick (Press |> IR_Input >> CompanyAddAndResponse)] [ text "Add company" ] 
+      , button [ onClick (CompanyAddPress |> CompanyAdd) ] [ text "Add company" ] 
       ]

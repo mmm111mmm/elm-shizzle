@@ -23,11 +23,3 @@ type RawHttp =
 type ResponseHttp a =
   Error Http.Error
   | ValueResponse a
-
-type InputAndPress a =
-  Press
-  | Input a 
-
-type InputAndResponse a b =
-  IR_Input a
-  | IR_Response b
