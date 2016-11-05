@@ -18,8 +18,7 @@ update msg m =
       onlyModel mo   = (mo, Cmd.none)
   
   in case msg of
-    LoginInput input          -> loginInputUpdate input m.loginInput m
-    LoginResponse resp        -> loginUpdate resp m
+    LoginAndResponse input    -> loginInputResponseUpdate input m.loginInput m
 
     CompanyInput input        -> companyInputUpdate input m.companyInput m
     CompanyAddResponse resp   -> companyAddUpdate resp m

@@ -5,6 +5,15 @@ import Messages exposing (..)
 import Requests exposing (..)
 import Utils exposing (..) 
 
+loginInputResponseUpdate : InputAndResponse (InputAndPress LoginInputData) (ResponseHttp String)
+                           -> LoginInputModel 
+                           -> Model 
+                           -> (Model, Cmd Msg)
+loginInputResponseUpdate input m model =
+  case input of
+    IR_Input i    -> loginInputUpdate i m model
+    IR_Response r -> loginUpdate r model 
+
 loginInputUpdate : InputAndPress LoginInputData -> LoginInputModel -> Model -> (Model, Cmd Msg)
 loginInputUpdate input m model =
   case input of

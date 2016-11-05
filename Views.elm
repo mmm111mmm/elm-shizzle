@@ -30,13 +30,13 @@ renderLogin session =
     div [] [
         div []  
             [ 
-              input [ placeholder "Username", onInput (Username >> Input >> LoginInput)] []
+              input [ placeholder "Username", onInput (Username >> Input >> IR_Input >> LoginAndResponse) ] []
             ]
         , div []  
             [ 
-              input [ placeholder "Password", onInput (Password >> Input >> LoginInput)] []
+              input [ placeholder "Password", onInput (Password >> Input >> IR_Input >> LoginAndResponse) ] []
             ]
-        , button [ onClick (Press |> LoginInput) ] [ text "Login" ] 
+        , button [ onClick (Press |> IR_Input >> LoginAndResponse) ] [ text "Login" ] 
         ]
 
 renderCompany : List Company -> Html Msg

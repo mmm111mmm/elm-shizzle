@@ -13,10 +13,13 @@ type CompanyInputData =
   | Lon String
   | Postcode String
 
+type InputAndResponse a b =
+  IR_Input a
+  | IR_Response b
+
 type Msg = 
   -- login
-    LoginInput (InputAndPress LoginInputData)
-  | LoginResponse (ResponseHttp String)
+  LoginAndResponse (InputAndResponse (InputAndPress LoginInputData) (ResponseHttp String))
   -- company add
   | CompanyInput (InputAndPress CompanyInputData)
   | CompanyAddResponse RawHttp

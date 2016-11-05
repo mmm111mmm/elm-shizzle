@@ -71,5 +71,6 @@ login d fail succeed=
   in
     Task.perform fail succeed <| Http.fromJson ("session" := Json.string) send
 
-loginFn = \input -> login input (Error >> LoginResponse) (ValueResponse >> LoginResponse)
+--loginFn = \input -> login input (Error >> LoginResponse) (ValueResponse >> LoginResponse)
+loginFn = \input -> login input (Error >> IR_Response >> LoginAndResponse) (ValueResponse >> IR_Response >> LoginAndResponse)
 
