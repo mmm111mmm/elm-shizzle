@@ -17,7 +17,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
   let
      _ = Debug.log "msg" msg
-  in 
+  in
     case msg of
       Login msg                 -> loginUpdate msg model.loginInput model
       LoginResponse msg         -> loginResponseUpdate msg model

@@ -4,88 +4,70 @@ import Html exposing (Html, div, text, button, input, p, span)
 import Html.Events exposing (on, keyCode, onClick, onInput)
 import Html.Attributes exposing (placeholder, style)
 import Html.App
-import Model exposing (..)
-import Messages exposing (..)
+import Model exposing (Model, Company, Technology)
+import Messages exposing (Msg(..), CompanyInputData(..))
 import Json.Decode as Json
-import Model exposing (..)
-import Utils exposing (..)
+
+import Views.Login exposing (..)
 
 view : Model -> Html Msg
-view model =  
-    div []   
-        [  
-        renderLogin model.session 
-        , p [] [] 
-        , renderCompany model.companies 
-        , p [] [] 
-        , renderCompanyAdd  
-        ]  
-
-
-renderLogin: String -> Html Msg
-renderLogin session = 
-  if session /= "" then 
-    div [] []
-  else 
-    div [] [
-        div []  
-            [ 
-              input [ placeholder "Username", onInput (Username >> Login) ] []
-            ]
-        , div []  
-            [ 
-              input [ placeholder "Password", onInput (Password >> Login) ] []
-            ]
-        , button [ onClick (LoginPress |> Login) ] [ text "Login" ] 
+view model =
+    div []
+        [
+        renderLogin model.session model.loginInput
+        , p [] []
+        , renderCompany model.companies
+        , p [] []
+        , renderCompanyAdd
         ]
 
 renderCompany : List Company -> Html Msg
-renderCompany companies = 
-  let 
+renderCompany companies =
+  let
     name = \c -> span [] [ text c.name, renderCompanyDel c.id ]
     divs = List.map (\c -> div [] [name c, (renderTech c.technologies)]) companies
-  in 
+  in
     div [] divs
 
 
 renderCompanyDel : String -> Html Msg
-renderCompanyDel id = 
+renderCompanyDel id =
     span [ style [("cursor", "pointer")], onClick (id |> CompanyDel) ] [ text " del" ]
 
 renderTech : Maybe (List Technology) -> Html Msg
-renderTech ts = 
-  let 
-    t = case ts of 
+renderTech ts =
+  let
+    t = case ts of
       Just t  -> List.map (\t -> div [] [text t.name]) t
       Nothing -> [div [] []]
     i = renderTech
-  in 
+  in
     div [style [("margin-left", "10px")] ] t
 
 
 renderTechInput: Html Msg
-renderTechInput = 
+renderTechInput =
     input [placeholder "tech", ( on "keyup" (Json.map (\i -> i |> TechAdd) keyCode) ) ] []
 
 
 renderCompanyAdd: Html Msg
-renderCompanyAdd = 
+renderCompanyAdd =
   div [] [
-      div []  
-          [ 
+      div []
+          [
             input [ onInput (Name >> CompanyAdd), placeholder "Name"] []
           ]
-      , div []  
-          [ 
+      , div []
+          [
             input [ onInput (Lat >> CompanyAdd), placeholder "lat"] []
           ]
-      , div []  
-          [ 
+      , div []
+          [
             input [ onInput (Lon >> CompanyAdd), placeholder "lon"] []
           ]
-      , div []  
-          [ 
+      , div []
+          [
             input [ onInput (Postcode >> CompanyAdd), placeholder "postcode" ] []
          ]
-      , button [ onClick (CompanyAddPress |> CompanyAdd) ] [ text "Add company" ] 
+      , button [ onClick (CompanyAddPress |> CompanyAdd) ] [ text "Add company" ]
       ]

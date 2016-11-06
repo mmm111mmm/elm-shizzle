@@ -1,15 +1,13 @@
-module Updaters.CompanyDel exposing (..) 
+module Updaters.CompanyDel exposing (..)
 
 import Model exposing (Model)
 import Messages exposing (Msg(..))
 import Requests exposing (delCompany, fetchCompanies)
-import Utils exposing (RawHttp(..), httpResponse) 
+import Utils exposing (RawHttp(..), httpResponse)
 
 companyDelUpdate : String -> Model -> (Model, Cmd Msg)
 companyDelUpdate id model =
   ( model, delCompany model.session id )
-
--- response
 
 companyDelResponseUpdate : RawHttp -> Model -> (Model, Cmd Msg)
 companyDelResponseUpdate input m =

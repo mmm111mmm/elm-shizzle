@@ -7,6 +7,7 @@ type LoginInputData =
   Username String
   | Password String
   | LoginPress
+  | LoginPressInvalid
 
 type CompanyInputData =
   Name String
@@ -15,18 +16,18 @@ type CompanyInputData =
   | Postcode String
   | CompanyAddPress
 
-type Msg =
+type Msg = 
 
-    Login LoginInputData 
+  Login LoginInputData
   | LoginResponse (ResponseHttp String)
 
   | CompanyAdd CompanyInputData
   | CompanyAddResponse RawHttp
 
-  | CompanyDel String 
+  | CompanyDel String
   | CompanyDelResponse RawHttp
 
-  | TechAdd Int 
+  | TechAdd Int
   | TechAddResponse RawHttp
 
   | CompanyListResponse (ResponseHttp (List Company))

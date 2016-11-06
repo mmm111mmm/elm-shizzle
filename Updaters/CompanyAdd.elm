@@ -1,15 +1,13 @@
-module Updaters.CompanyAdd exposing (..) 
+module Updaters.CompanyAdd exposing (..)
 
 import Model exposing (Model, CompanyInputModel)
 import Messages exposing (Msg, CompanyInputData(..))
 import Requests exposing (addCompany, fetchCompanies)
-import Utils exposing (RawHttp(..), httpResponse) 
-
--- input
+import Utils exposing (RawHttp(..), httpResponse)
 
 companyAddUpdate : CompanyInputData -> CompanyInputModel -> Model -> (Model, Cmd Msg)
 companyAddUpdate input m model =
-  let 
+  let
     mod =
       case input of
         Name s     -> { m | name = s }
@@ -17,14 +15,12 @@ companyAddUpdate input m model =
         Lon s      -> { m | lon = s }
         Postcode s -> { m | postcode = s }
         _          -> m
-    fn = 
+    fn =
       case input of
         CompanyAddPress -> addCompany model.session m
         _               -> Cmd.none
-  in 
+  in
     ( { model | companyInput = mod }, fn )
-
--- response
 
 companyAddResponseUpdate : RawHttp -> Model -> (Model, Cmd Msg)
 companyAddResponseUpdate input model =
