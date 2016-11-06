@@ -2,7 +2,7 @@ module Model exposing (..)
 
 import Json.Decode as Json exposing (..)
 
--- login
+-- input
 
 type alias LoginInputModel = {
   username : String
@@ -12,8 +12,6 @@ type alias LoginInputModel = {
 
 initLoginInputModel = LoginInputModel "" "" False
 
--- company add
-
 type alias CompanyInputModel = {
   name: String
   , lat: String
@@ -22,6 +20,13 @@ type alias CompanyInputModel = {
 }
 
 initCompanyInputModel = CompanyInputModel "" "" "" ""
+
+
+type alias TechAddInputModel = {
+  name : String
+}
+
+initTechAddInput = TechAddInputModel ""
 
 -- main display
 
@@ -45,11 +50,11 @@ type alias Model = {
   session:        String
   , loginInput:   LoginInputModel
   , companyInput: CompanyInputModel
+  , techAddInput: TechAddInputModel
   , companies:    List Company
-  , res:          String
 }
 
-initModel = Model "" initLoginInputModel initCompanyInputModel [] ""
+initModel = Model "" initLoginInputModel initCompanyInputModel initTechAddInput []
 
 -- json stuff
 

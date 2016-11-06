@@ -1,11 +1,14 @@
 module Main exposing (..)
 
-import Html exposing (Html, div, p)
 import Html.App
+import Html exposing (Html, div, p)
 import Messages exposing (Msg(..))
 import Model exposing (Model, initModel)
-import Views exposing (view)
 import Requests exposing (fetchCompanies)
+
+import Views.Login exposing (renderLogin)
+import Views.Company exposing (renderCompany)
+import Views.CompanyAdd exposing (renderCompanyAdd)
 
 import Updaters.Login exposing (loginUpdate, loginResponseUpdate)
 import Updaters.CompanyAdd exposing (companyAddUpdate, companyAddResponseUpdate)
@@ -28,10 +31,24 @@ update msg model =
       CompanyDel msg            -> companyDelUpdate msg model
       CompanyDelResponse msg    -> companyDelResponseUpdate msg model
 
-      TechAdd msg               -> techAddUpdate msg model
+      TechAdd msg               -> techAddUpdate msg model.techAddInput model
       TechAddResponse msg       -> techAddResponseUpdate msg model
 
       CompanyListResponse msg   -> companiesUpdate msg model
+
+--
+
+view : Model -> Html Msg
+view model =
+    div []
+        [
+        renderLogin model.session model.loginInput
+        , p [] []
+        , renderCompany model.companies
+        , p [] []
+        , renderCompanyAdd
+        ]
+
 
 -- Subs and main
 
