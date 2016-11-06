@@ -2,6 +2,16 @@ module Model exposing (..)
 
 import Json.Decode as Json exposing (..)
 
+type alias Model = {
+  session:        String
+  , loginInput:   LoginInputModel
+  , companyInput: CompanyInputModel
+  , techAddInput: TechAddInputModel
+  , companies:    List Company
+}
+
+initModel = Model "" initLoginInputModel initCompanyInputModel initTechAddInput []
+
 -- input
 
 type alias LoginInputModel = {
@@ -43,18 +53,6 @@ type alias Technology = {
   id: String
   , name: String
 }
-
--- overall
-
-type alias Model = {
-  session:        String
-  , loginInput:   LoginInputModel
-  , companyInput: CompanyInputModel
-  , techAddInput: TechAddInputModel
-  , companies:    List Company
-}
-
-initModel = Model "" initLoginInputModel initCompanyInputModel initTechAddInput []
 
 -- json stuff
 

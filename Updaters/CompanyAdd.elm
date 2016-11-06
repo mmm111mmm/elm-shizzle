@@ -5,9 +5,10 @@ import Messages exposing (Msg, CompanyInputData(..))
 import Requests exposing (addCompany, fetchCompanies)
 import Utils exposing (RawHttp(..), httpResponse)
 
-companyAddUpdate : CompanyInputData -> CompanyInputModel -> Model -> (Model, Cmd Msg)
-companyAddUpdate input m model =
+companyAddUpdate : CompanyInputData -> Model -> (Model, Cmd Msg)
+companyAddUpdate input model =
   let
+    m = model.companyInput
     mod =
       case input of
         Name s     -> { m | name = s }

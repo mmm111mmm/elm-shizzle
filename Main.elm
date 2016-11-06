@@ -22,16 +22,16 @@ update msg model =
      _ = Debug.log "msg" msg
   in
     case msg of
-      Login msg                 -> loginUpdate msg model.loginInput model
+      Login msg                 -> loginUpdate msg model
       LoginResponse msg         -> loginResponseUpdate msg model
 
-      CompanyAdd msg            -> companyAddUpdate msg model.companyInput model
+      CompanyAdd msg            -> companyAddUpdate msg model
       CompanyAddResponse msg    -> companyAddResponseUpdate msg model
 
       CompanyDel msg            -> companyDelUpdate msg model
       CompanyDelResponse msg    -> companyDelResponseUpdate msg model
 
-      TechAdd msg               -> techAddUpdate msg model.techAddInput model
+      TechAdd msg               -> techAddUpdate msg model
       TechAddResponse msg       -> techAddResponseUpdate msg model
 
       CompanyListResponse msg   -> companiesUpdate msg model

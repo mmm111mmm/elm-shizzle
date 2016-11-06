@@ -21,6 +21,7 @@ type CompanyInputData =
 type TechInputData =
 
   TechName String
+  | TechEnter Int
 
 type Msg =
 

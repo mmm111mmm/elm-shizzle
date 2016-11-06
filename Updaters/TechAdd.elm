@@ -7,15 +7,23 @@ import Utils exposing (RawHttp(..), httpResponse)
 import String exposing (append, fromChar)
 import Char exposing (fromCode)
 
-techAddUpdate : TechInputData -> TechAddInputModel -> Model -> (Model, Cmd Msg)
-techAddUpdate key techadd model =
+techAddUpdate : TechInputData -> Model -> (Model, Cmd Msg)
+techAddUpdate key model =
   let
+    techadd = model.techAddInput
     input =
       case key of
-        TechName s -> { techadd | name = s }
-        --_  -> { techadd | name = (append (fromCode key |> fromChar) techadd.name) }
+        TechName s  -> { techadd | name = s }
+        _ -> techadd
+    command =
+      case key of
+        TechEnter k -> if k == 13 then
+                         addTech model.session
+                       else
+                         Cmd.none
+        _ -> Cmd.none
   in
-    ({ model | techAddInput = input }, Cmd.none)
+    ({ model | techAddInput = input }, command)
 
 techAddResponseUpdate : RawHttp -> Model -> (Model, Cmd Msg)
 techAddResponseUpdate input model =

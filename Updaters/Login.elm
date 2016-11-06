@@ -5,21 +5,23 @@ import Messages exposing (Msg, LoginInputData(..))
 import Requests exposing (loginFn)
 import Utils exposing (ResponseHttp(..))
 
-loginUpdate : LoginInputData -> LoginInputModel -> Model -> (Model, Cmd Msg)
-loginUpdate input m model =
+loginUpdate : LoginInputData -> Model -> (Model, Cmd Msg)
+loginUpdate input model =
   let
-    mod =
+    login = 
+      model.loginInput
+    mod   =
       case input of
-        Username s        -> { m | username = s }
-        Password s        -> { m | password = s }
-        LoginPressInvalid -> { m | loginPressInvalid = True }
-        _                 -> m
+        Username s        -> { login | username = s }
+        Password s        -> { login | password = s }
+        LoginPressInvalid -> { login | loginPressInvalid = True }
+        _                 -> login
     fn =
       case input of
         LoginPress  -> loginFn model.loginInput
         _           -> Cmd.none
   in
-    ( { model | loginInput = mod }, fn)
+    ( { model | loginInput = login }, fn)
 
 loginResponseUpdate : ResponseHttp String -> Model -> (Model, Cmd Msg)
 loginResponseUpdate input model =

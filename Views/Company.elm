@@ -20,8 +20,14 @@ renderCompany companies =
 renderTech : Maybe (List Technology) -> Html Msg
 renderTech ts =
   let
-    --codeToMsg = Json.map (\i -> i |> TechAdd) keyCode
-    techInput = input [ placeholder "tech", onInput (TechName >> TechAdd) ] []
+    codeToMsg = Json.map (\i -> i |> TechEnter >> TechAdd) keyCode
+    techInput =
+      input [
+        placeholder "tech"
+        , onInput (TechName >> TechAdd)
+        , on "keyup" codeToMsg
+      ]
+      []
     t = case ts of
       Just t  -> List.map (\t -> div [] [text t.name]) t
       Nothing -> [div [] []]
