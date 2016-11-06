@@ -8,20 +8,21 @@ import Utils exposing (RawHttp(..), httpResponse)
 companyAddUpdate : CompanyInputData -> Model -> (Model, Cmd Msg)
 companyAddUpdate input model =
   let
-    m = model.companyInput
-    mod =
+    companyAddModel =
+      model.companyInput
+    updatedModel =
       case input of
-        Name s     -> { m | name = s }
-        Lat s      -> { m | lat = s }
-        Lon s      -> { m | lon = s }
-        Postcode s -> { m | postcode = s }
-        _          -> m
-    fn =
+        Name s     -> { companyAddModel | name = s }
+        Lat s      -> { companyAddModel | lat = s }
+        Lon s      -> { companyAddModel | lon = s }
+        Postcode s -> { companyAddModel | postcode = s }
+        _          -> companyAddModel
+    command =
       case input of
-        CompanyAddPress -> addCompany model.session m
+        CompanyAddPress -> addCompany model.session companyAddModel
         _               -> Cmd.none
   in
-    ( { model | companyInput = mod }, fn )
+    ( { model | companyInput = updatedModel }, command )
 
 companyAddResponseUpdate : RawHttp -> Model -> (Model, Cmd Msg)
 companyAddResponseUpdate input model =
