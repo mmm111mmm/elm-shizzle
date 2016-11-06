@@ -8,16 +8,16 @@ import String exposing (append, fromChar)
 import Char exposing (fromCode)
 
 techAddUpdate : TechInputData -> Model -> (Model, Cmd Msg)
-techAddUpdate key model =
+techAddUpdate msg model =
   let
     techAddModel =
       model.techAddInput
     updatedModel =
-      case key of
+      case msg of
         TechName s  -> { techAddModel | name = s }
         _ -> techAddModel
     command =
-      case key of
+      case msg of
         TechEnter k id -> if k == 13 then
                             addTech model.session id techAddModel
                           else

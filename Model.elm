@@ -29,7 +29,7 @@ type alias CompanyInputModel = {
   , postcode: String
 }
 
-initCompanyInputModel = CompanyInputModel "" "" "" ""
+initCompanyInputModel = CompanyInputModel "" "0" "0" ""
 
 
 type alias TechAddInputModel = {

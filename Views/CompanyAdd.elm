@@ -11,15 +11,7 @@ renderCompanyAdd =
   div [] [
       div []
           [
-            input [ onInput (Name >> CompanyAdd), placeholder "Name"] []
-          ]
-      , div []
-          [
-            input [ onInput (Lat >> CompanyAdd), placeholder "lat"] []
-          ]
-      , div []
-          [
-            input [ onInput (Lon >> CompanyAdd), placeholder "lon"] []
+            input [ onInput (Name >> CompanyAdd), placeholder "name"] []
           ]
       , div []
           [

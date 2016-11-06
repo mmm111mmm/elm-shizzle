@@ -15,11 +15,11 @@ renderLogin session model =
     div [] [
         div []
             [
-              input [ placeholder "Username", onInput (Username >> Login) ] []
+              input [ placeholder "username", onInput (Username >> Login) ] []
             ]
         , div []
             [
-              input [ placeholder "Password", onInput (Password >> Login) ] []
+              input [ placeholder "password", onInput (Password >> Login) ] []
             ]
         , button [ onClick (model |> isPressValid) ] [ text "Login" ]
         , div [ style [ displayNoUserPassMessage model ] ] [ text "Please enter a username and password" ]
