@@ -37,4 +37,7 @@ type Msg =
   | TechAdd TechInputData
   | TechAddResponse RawHttp
 
+  | TechDel String
+  | TechDelResponse RawHttp
+
   | CompanyListResponse (ResponseHttp (List Company))

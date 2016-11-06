@@ -31,8 +31,8 @@ companyAdd session d fail succeed =
     Task.perform fail succeed <| send
 
 addCompany : String -> CompanyInputModel -> Cmd Msg
-addCompany = \sess input -> companyAdd sess input 
-  (RawError >> CompanyAddResponse) 
+addCompany = \sess input -> companyAdd sess input
+  (RawError >> CompanyAddResponse)
   (RawResponse >> CompanyAddResponse)
 
 
@@ -46,8 +46,8 @@ companyDel session id fail succeed =
     Task.perform fail succeed send
 
 delCompany : String -> String -> Cmd Msg
-delCompany = \sess id -> companyDel sess id 
-  (RawError >> CompanyDelResponse) 
+delCompany = \sess id -> companyDel sess id
+  (RawError >> CompanyDelResponse)
   (RawResponse >> CompanyDelResponse)
 
 
@@ -62,8 +62,22 @@ techAdd session companyId name fail succeed =
     Task.perform fail succeed <| send
 
 addTech: String -> String -> TechAddInputModel -> Cmd Msg
-addTech sess id input = 
+addTech sess id input =
   techAdd sess id input.name (RawError >> TechAddResponse) (RawResponse >> TechAddResponse)
+
+techDel : String -> String -> (Http.RawError -> a) -> (Http.Response -> a) -> Cmd a
+techDel session id fail succeed =
+  let url  = "http://localhost:8901/company/delete/tech/" ++ id
+      hs   = [ ("Content-Type", "application/json"), ("session", session) ]
+      req  = Http.Request "POST" hs url Http.empty
+      send = Http.send Http.defaultSettings req
+  in
+    Task.perform fail succeed send
+
+delTech : String -> String -> Cmd Msg
+delTech = \sess id -> techDel sess id
+  (RawError >> TechDelResponse)
+  (RawResponse >> TechDelResponse)
 
 
 login : LoginInputModel -> (Http.Error -> a) -> (String -> a) -> Cmd a

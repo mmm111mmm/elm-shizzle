@@ -14,6 +14,7 @@ import Updaters.Login exposing (loginUpdate, loginResponseUpdate)
 import Updaters.CompanyAdd exposing (companyAddUpdate, companyAddResponseUpdate)
 import Updaters.CompanyDel exposing (companyDelUpdate, companyDelResponseUpdate)
 import Updaters.TechAdd exposing (techAddUpdate, techAddResponseUpdate)
+import Updaters.TechDel exposing (techDelUpdate, techDelResponseUpdate)
 import Updaters.CompanyList exposing (companiesUpdate)
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -33,6 +34,9 @@ update msg model =
 
       TechAdd msg               -> techAddUpdate msg model
       TechAddResponse msg       -> techAddResponseUpdate msg model
+
+      TechDel msg               -> techDelUpdate msg model
+      TechDelResponse msg       -> techDelResponseUpdate msg model
 
       CompanyListResponse msg   -> companiesUpdate msg model
 
