@@ -1,9 +1,8 @@
-module Views.Login exposing (..)
+module Views.Login exposing (renderLogin)
 
 import Html exposing (Html, div, text, button, input)
 import Html.Events exposing (onClick, onInput)
 import Html.Attributes exposing (placeholder, style)
-import Html.App
 import Model exposing (Model, LoginInputModel)
 import Messages exposing (Msg(Login), LoginInputData(..))
 import String exposing (trim, length)

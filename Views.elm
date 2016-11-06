@@ -8,7 +8,8 @@ import Model exposing (Model, Company, Technology)
 import Messages exposing (Msg(..), CompanyInputData(..))
 import Json.Decode as Json
 
-import Views.Login exposing (..)
+import Views.Login exposing (renderLogin)
+import Views.CompanyAdd exposing (renderCompanyAdd)
 
 view : Model -> Html Msg
 view model =
@@ -40,7 +41,7 @@ renderTech ts =
     t = case ts of
       Just t  -> List.map (\t -> div [] [text t.name]) t
       Nothing -> [div [] []]
-    i = renderTech
+    i = renderTechInput
   in
     div [style [("margin-left", "10px")] ] t
 
@@ -48,26 +49,3 @@ renderTech ts =
 renderTechInput: Html Msg
 renderTechInput =
     input [placeholder "tech", ( on "keyup" (Json.map (\i -> i |> TechAdd) keyCode) ) ] []
-
-
-renderCompanyAdd: Html Msg
-renderCompanyAdd =
-  div [] [
-      div []
-          [
-            input [ onInput (Name >> CompanyAdd), placeholder "Name"] []
-          ]
-      , div []
-          [
-            input [ onInput (Lat >> CompanyAdd), placeholder "lat"] []
-          ]
-      , div []
-          [
-            input [ onInput (Lon >> CompanyAdd), placeholder "lon"] []
-          ]
-      , div []
-          [
-            input [ onInput (Postcode >> CompanyAdd), placeholder "postcode" ] []
-         ]
-      , button [ onClick (CompanyAddPress |> CompanyAdd) ] [ text "Add company" ]
-      ]
