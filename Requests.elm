@@ -51,20 +51,19 @@ delCompany = \sess id -> companyDel sess id
   (RawResponse >> CompanyDelResponse)
 
 
-techAdd : String -> (Http.RawError -> a) -> (Http.Response -> a) -> Cmd a
-techAdd session fail succeed =
-  let body = Http.string ("""{"name":"javaaa!" """)
-      url  = "http://localhost:8901/technology/insert"
+techAdd : String -> String -> String -> (Http.RawError -> a) -> (Http.Response -> a) -> Cmd a
+techAdd session companyId name fail succeed =
+  let body = Http.string ("""{"name":"""++toString name++""", "companyId":""" ++ companyId ++ """}""")
+      url  = "http://localhost:8901/company/insert/tech"
       hs   = [ ("Content-Type", "application/json"), ("session", session) ]
       req  = Http.Request "POST" hs url body
       send = Http.send Http.defaultSettings req
   in
     Task.perform fail succeed <| send
 
-addTech: String -> Cmd Msg
-addTech = \sess -> techAdd sess 
-  (RawError >> TechAddResponse) 
-  (RawResponse >> TechAddResponse)
+addTech: String -> String -> TechAddInputModel -> Cmd Msg
+addTech sess id input = 
+  techAdd sess id input.name (RawError >> TechAddResponse) (RawResponse >> TechAddResponse)
 
 
 login : LoginInputModel -> (Http.Error -> a) -> (String -> a) -> Cmd a

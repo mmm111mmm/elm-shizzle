@@ -13,14 +13,14 @@ renderCompany companies =
     del id = span [ style [("cursor", "pointer")], onClick (id |> CompanyDel) ] [ text " del" ]
     name c = span [] [ text c.name, del c.id ]
     divider = p [] []
-    divs = List.map (\c -> div [] [name c, (renderTech c.technologies), divider]) companies
+    divs = List.map (\c -> div [] [name c, (renderTech c.technologies c.id), divider]) companies
   in
     div [] divs
 
-renderTech : Maybe (List Technology) -> Html Msg
-renderTech ts =
+renderTech : Maybe (List Technology) -> String -> Html Msg
+renderTech ts id =
   let
-    codeToMsg = Json.map (\i -> i |> TechEnter >> TechAdd) keyCode
+    codeToMsg = Json.map (\k -> TechEnter k id |> TechAdd) keyCode
     techInput =
       input [
         placeholder "tech"

@@ -10,17 +10,18 @@ import Char exposing (fromCode)
 techAddUpdate : TechInputData -> Model -> (Model, Cmd Msg)
 techAddUpdate key model =
   let
-    techadd = model.techAddInput
+    techadd = 
+      model.techAddInput
     input =
       case key of
         TechName s  -> { techadd | name = s }
         _ -> techadd
     command =
       case key of
-        TechEnter k -> if k == 13 then
-                         addTech model.session
-                       else
-                         Cmd.none
+        TechEnter k id -> if k == 13 then
+                           addTech model.session id model.techAddInput
+                         else
+                           Cmd.none
         _ -> Cmd.none
   in
     ({ model | techAddInput = input }, command)

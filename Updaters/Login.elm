@@ -21,7 +21,7 @@ loginUpdate input model =
         LoginPress  -> loginFn model.loginInput
         _           -> Cmd.none
   in
-    ( { model | loginInput = login }, fn)
+    ( { model | loginInput = mod }, fn)
 
 loginResponseUpdate : ResponseHttp String -> Model -> (Model, Cmd Msg)
 loginResponseUpdate input model =
