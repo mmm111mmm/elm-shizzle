@@ -8,20 +8,20 @@ import Utils exposing (ResponseHttp(..))
 loginUpdate : LoginInputData -> Model -> (Model, Cmd Msg)
 loginUpdate input model =
   let
-    login = 
+    loginModel  =
       model.loginInput
-    mod   =
+    updatedModel =
       case input of
-        Username s        -> { login | username = s }
-        Password s        -> { login | password = s }
-        LoginPressInvalid -> { login | loginPressInvalid = True }
-        _                 -> login
-    fn =
+        Username s        -> { loginModel | username = s }
+        Password s        -> { loginModel | password = s }
+        LoginPressInvalid -> { loginModel | loginPressInvalid = True }
+        _                 -> loginModel
+    command =
       case input of
-        LoginPress  -> loginFn model.loginInput
+        LoginPress  -> loginFn loginModel
         _           -> Cmd.none
   in
-    ( { model | loginInput = mod }, fn)
+    ( { model | loginInput = updatedModel }, command)
 
 loginResponseUpdate : ResponseHttp String -> Model -> (Model, Cmd Msg)
 loginResponseUpdate input model =

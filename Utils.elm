@@ -1,6 +1,6 @@
 module Utils exposing (..)
 
-import Http exposing (..)
+import Http
 
 httpResponse : Http.Response -> (() -> (model, Cmd msg)) -> (() -> (model, Cmd msg)) -> (model, Cmd msg)
 httpResponse r success failure =
