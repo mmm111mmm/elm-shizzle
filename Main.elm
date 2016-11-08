@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Html.App
-import Html exposing (Html, div, p)
+import Html exposing (Html, div, p, text)
 import Messages exposing (Msg(..))
 import Model exposing (Model, initModel)
 import Requests exposing (fetchCompanies)
@@ -20,7 +20,7 @@ import Updaters.CompanyList exposing (companiesUpdate)
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
   let
-     _ = Debug.log "msg" msg
+     _ = Debug.log "msg!" msg
   in
     case msg of
       Login msg                 -> loginUpdate msg model
