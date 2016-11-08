@@ -2,7 +2,7 @@ module Views.Login exposing (renderLogin)
 
 import Html exposing (Html, div, text, button, input)
 import Html.Events exposing (onClick, onInput)
-import Html.Attributes exposing (placeholder, style)
+import Html.Attributes exposing (placeholder, style, type')
 import Model exposing (Model, LoginInputModel)
 import Messages exposing (Msg(Login), LoginInputData(..))
 import String exposing (trim, length)
@@ -15,11 +15,11 @@ renderLogin session model =
     div [] [
         div []
             [
-              input [ placeholder "username", onInput (Username >> Login) ] []
+              input [ placeholder "username", type' "text", onInput (Username >> Login) ] []
             ]
         , div []
             [
-              input [ placeholder "password", onInput (Password >> Login) ] []
+              input [ placeholder "password", type' "text", onInput (Password >> Login) ] []
             ]
         , button [ onClick (model |> isPressValid) ] [ text "Login" ]
         , div [ style [ displayNoUserPassMessage model ] ] [ text "Please enter a username and password" ]
