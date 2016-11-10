@@ -1,6 +1,6 @@
 module Views.Login exposing (renderLogin)
 
-import Html exposing (Html, div, text, button, input)
+import Html exposing (Html, span, div, text, button, input, p)
 import Html.Events exposing (onClick, onInput)
 import Html.Attributes exposing (placeholder, style, type')
 import Model exposing (Model, LoginInputModel)
@@ -10,7 +10,7 @@ import String exposing (trim, length)
 renderLogin: String -> LoginInputModel -> Html Msg
 renderLogin session model =
   if session /= "" then
-    div [] []
+    span [] []
   else
     div [] [
         div []
@@ -23,6 +23,7 @@ renderLogin session model =
             ]
         , button [ onClick (model |> isPressValid) ] [ text "Login" ]
         , div [ style [ displayNoUserPassMessage model ] ] [ text "Please enter a username and password" ]
+        , p [] []
         ]
 
 displayNoUserPassMessage : LoginInputModel -> (String,String)

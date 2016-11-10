@@ -1,7 +1,8 @@
-module Main exposing (..)
+port module Main exposing (..)
 
 import Html.App
-import Html exposing (Html, div, p, text)
+import Html exposing (Html, div, p, text, hr)
+import Html.Attributes exposing (id, style)
 import Messages exposing (Msg(..))
 import Model exposing (Model, initModel)
 import Requests exposing (fetchCompanies)
@@ -44,13 +45,21 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
+  let
+    floatLeft = style [("float", "left"), ("margin-right", "10px")]
+  in
     div []
         [
-        renderLogin model.session model.loginInput
+        div [] [
+          div [ floatLeft ] [
+            renderCompany model.companies
+            , hr [] []
+            , renderCompanyAdd
+          ]
+          , div [id "mapid", floatLeft ] []
+          , div [ floatLeft ] [renderLogin model.session model.loginInput]
+        ]
         , p [] []
-        , renderCompany model.companies
-        , p [] []
-        , renderCompanyAdd
         ]
 
 
@@ -58,7 +67,9 @@ view model =
 
 init : (Model, Cmd Msg)
 init =
-  (initModel, fetchCompanies)
+  (initModel, Cmd.batch [setupLeaflet True, fetchCompanies])
+
+port setupLeaflet : Bool -> Cmd msg
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
