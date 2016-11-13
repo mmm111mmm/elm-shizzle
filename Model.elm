@@ -3,14 +3,15 @@ module Model exposing (..)
 import Json.Decode as Json exposing (..)
 
 type alias Model = {
-  session:        String
+  page:           String
+  , session:        String
   , loginInput:   LoginInputModel
   , companyInput: CompanyInputModel
   , techAddInput: TechAddInputModel
   , companies:    List Company
 }
 
-initModel = Model "" initLoginInputModel initCompanyInputModel initTechAddInput []
+initModel = Model "home" "" initLoginInputModel initCompanyInputModel initTechAddInput []
 
 -- input
 

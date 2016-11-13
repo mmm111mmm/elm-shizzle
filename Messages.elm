@@ -10,6 +10,13 @@ type LoginInputData =
   | LoginPress
   | LoginPressInvalid
 
+type Pages =
+
+  LoginPage
+  | CompanyAddPage
+  | HomePage
+
+
 type CompanyInputData =
 
   Name String
@@ -25,7 +32,9 @@ type TechInputData =
 
 type Msg =
 
-  Login LoginInputData
+  Pages Pages
+
+  | Login LoginInputData
   | LoginResponse (ResponseHttp String)
 
   | CompanyAdd CompanyInputData

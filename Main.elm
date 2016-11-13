@@ -1,11 +1,15 @@
-port module Main exposing (..)
+module Main exposing (..)
 
 import Html.App
-import Html exposing (Html, div, p, text, hr)
+import Html exposing (Html, div, p, text, hr, span)
 import Html.Attributes exposing (id, style)
-import Messages exposing (Msg(..))
+import Html.Events exposing (onClick)
+import Messages exposing (..)
 import Model exposing (Model, initModel)
 import Requests exposing (fetchCompanies)
+import Task
+
+import Leaflet exposing (..)
 
 import Views.Login exposing (renderLogin)
 import Views.Company exposing (renderCompany)
@@ -24,6 +28,8 @@ update msg model =
      _ = Debug.log "msg!" msg
   in
     case msg of
+      Pages msg                 -> pageUpdate msg model
+
       Login msg                 -> loginUpdate msg model
       LoginResponse msg         -> loginResponseUpdate msg model
 
@@ -43,23 +49,38 @@ update msg model =
 
 --
 
+pageUpdate msg model =
+  case msg of
+    LoginPage      -> ( {model | page = "login" }, Cmd.none)
+    HomePage       -> ( {model | page = "home" }, Cmd.batch [
+      fetchCompanies])
+    CompanyAddPage -> ( {model | page = "add" }, Cmd.none)
+
 view : Model -> Html Msg
 view model =
   let
-    floatLeft = style [("float", "left"), ("margin-right", "10px")]
+    loginVis   = if model.page == "login" then "block" else "none"
+    homeVis    = if model.page == "home" then "block" else "none"
+    addVis     = if model.page == "add" then "block" else "none"
+    pointy     = style [("cursor", "pointer")]
+    floatLeft  = style [("float", "left"), ("margin-right", "10px")]
+    --companies  = div [] [renderCompany model.companies, map]
+    companies  = div [] [map]
+    map        = div [id "mapid", floatLeft ] []
+    login      = div [] [renderLogin model.session model.loginInput]
+    nav        = div [] [
+      span [pointy, onClick (HomePage |> Pages)] [text "home"]
+      , span [] [text " | "]
+      , span [pointy, onClick (LoginPage |> Pages)] [text "login"]
+      , span [] [text " | "]
+      , span [pointy, onClick (CompanyAddPage |> Pages)] [text "add"]
+    ]
   in
     div []
-        [
-        div [] [
-          div [ floatLeft ] [
-            renderCompany model.companies
-            , hr [] []
-            , renderCompanyAdd
-          ]
-          , div [id "mapid", floatLeft ] []
-          , div [ floatLeft ] [renderLogin model.session model.loginInput]
-        ]
-        , p [] []
+        [ nav
+        , div [ style [ ("display", loginVis) ] ] [ login ]
+        , div [ style [ ("display", addVis) ] ] [ renderCompanyAdd ]
+        , div [ style [ ("display", homeVis) ] ] [ companies ]
         ]
 
 
@@ -67,9 +88,7 @@ view model =
 
 init : (Model, Cmd Msg)
 init =
-  (initModel, Cmd.batch [setupLeaflet True, fetchCompanies])
-
-port setupLeaflet : Bool -> Cmd msg
+  (initModel, Cmd.batch [Task.perform Pages Pages (Task.succeed HomePage), Leaflet.setupLeaflet True])
 
 subscriptions : Model -> Sub Msg
 subscriptions model =

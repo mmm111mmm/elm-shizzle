@@ -20,19 +20,32 @@
     var node = document.getElementById('main');
     var app = Elm.Main.embed(node);
 
+    var mymap;
+
     app.ports.setupLeaflet.subscribe(setupLeaflet);
+
     function setupLeaflet(b) {
-      var mymap = L.map('mapid').setView([53.479959, -2.244644], 13);
+      mymap = L.map('mapid', {
+        center: [53.480873, -2.237027],
+        zoom: 15
+      });
 
     	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={token}', {
-    		maxZoom: 18,
-    		attribution: 'hiya ',
+    		maxZoom: 17,
+    		attribution: '',
     		id: 'mapbox.streets',
         token: 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw'
     	}).addTo(mymap);
 
-      var marker = L.marker([53.479959, -2.244644]).addTo(mymap);
-      marker.bindPopup("HELLO!").openPopup();
+    }
+
+    app.ports.addLeafletPin.subscribe(addLeafletPin);
+
+    function addLeafletPin(arg) {
+      var [title, lat, lon] = arg
+      var marker = L.marker([lat, lon]).addTo(mymap);
+      marker.bindPopup(title);//.openPopup();
+      mymap.panTo(new L.LatLng(53.483873, -2.237027));
     }
 
 

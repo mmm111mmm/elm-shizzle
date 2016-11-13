@@ -15,7 +15,11 @@ renderCompanyAdd =
           ]
       , div []
           [
-            input [ onInput (Postcode >> CompanyAdd), type' "text", placeholder "postcode" ] []
+            input [ onInput (Lat >> CompanyAdd), type' "text", placeholder "lat" ] []
+         ]
+      , div []
+          [
+            input [ onInput (Lon >> CompanyAdd), type' "text", placeholder "lon" ] []
          ]
       , button [ onClick (CompanyAddPress |> CompanyAdd), type' "text" ] [ text "Add company" ]
       ]
