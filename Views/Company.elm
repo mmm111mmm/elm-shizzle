@@ -1,4 +1,4 @@
-module Views.Company exposing (renderCompany)
+module Views.Company exposing (renderCompany, renderTech)
 
 import Html exposing (Html, div, text, span, input, p)
 import Html.Events exposing (on, keyCode, onClick, onInput)

@@ -4,16 +4,23 @@ import Json.Decode as Json exposing (..)
 
 type alias Model = {
   page:           String
-  , session:        String
+  , session:      String
   , loginInput:   LoginInputModel
   , companyInput: CompanyInputModel
   , techAddInput: TechAddInputModel
+  , companyListInput: CompanyListInputModel
   , companies:    List Company
 }
 
-initModel = Model "home" "" initLoginInputModel initCompanyInputModel initTechAddInput []
+initModel = Model "home" "" initLoginInputModel initCompanyInputModel initTechAddInput initCompanyListInputModel []
 
 -- input
+
+type alias CompanyListInputModel = {
+  id : String
+}
+
+initCompanyListInputModel = CompanyListInputModel ""
 
 type alias LoginInputModel = {
   username : String

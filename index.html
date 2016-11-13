@@ -42,9 +42,12 @@
     app.ports.addLeafletPin.subscribe(addLeafletPin);
 
     function addLeafletPin(arg) {
-      var [title, lat, lon] = arg
+      var [id, title, lat, lon] = arg
       var marker = L.marker([lat, lon]).addTo(mymap);
       marker.bindPopup(title);//.openPopup();
+      marker.addEventListener("click", function() {
+        app.ports.companyClick.send(id);
+      })
       mymap.panTo(new L.LatLng(53.483873, -2.237027));
     }
 

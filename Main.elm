@@ -4,6 +4,7 @@ import Html.App
 import Html exposing (Html, div, p, text, hr, span)
 import Html.Attributes exposing (id, style)
 import Html.Events exposing (onClick)
+import Utils exposing (pointy, floatLeft)
 import Messages exposing (..)
 import Model exposing (Model, initModel)
 import Requests exposing (fetchCompanies)
@@ -12,15 +13,15 @@ import Task
 import Leaflet exposing (..)
 
 import Views.Login exposing (renderLogin)
-import Views.Company exposing (renderCompany)
-import Views.CompanyAdd exposing (renderCompanyAdd)
+import Views.Company exposing (..)
+import Views.CompanyAdd exposing (..)
 
 import Updaters.Login exposing (loginUpdate, loginResponseUpdate)
 import Updaters.CompanyAdd exposing (companyAddUpdate, companyAddResponseUpdate)
 import Updaters.CompanyDel exposing (companyDelUpdate, companyDelResponseUpdate)
 import Updaters.TechAdd exposing (techAddUpdate, techAddResponseUpdate)
 import Updaters.TechDel exposing (techDelUpdate, techDelResponseUpdate)
-import Updaters.CompanyList exposing (companiesUpdate)
+import Updaters.CompanyList exposing (companiesUpdate, companyListUpdate)
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -45,6 +46,7 @@ update msg model =
       TechDel msg               -> techDelUpdate msg model
       TechDelResponse msg       -> techDelResponseUpdate msg model
 
+      CompanyList msg           -> companyListUpdate msg model
       CompanyListResponse msg   -> companiesUpdate msg model
 
 --
@@ -62,19 +64,23 @@ view model =
     loginVis    = if model.page == "login" then "block" else "none"
     homeVis     = if model.page == "home" then "block" else "none"
     addVis      = if model.page == "add" then "block" else "none"
-    pointy      = style [("cursor", "pointer")]
-    floatLeft   = style [("float", "left"), ("margin-right", "10px")]
     --companies  = div [] [renderCompany model.companies, map]
-    companyInfo = div [ floatLeft ] [
-      div [] [text "Name"]
-      , div [] [text "Technologies"]
-    ]
+    companyIn   = model.companyListInput
+    company     = List.filter (\c -> c.id == companyIn.id) model.companies |> List.head
+    companyInfo = case company of
+      Just c ->
+        div [ floatLeft ] [
+          div [] [ text ("Name: " ++ c.name) ]
+          , div [] [ text "Technologies", renderTech c.technologies c.id ]
+        ]
+      Nothing ->
+        div [] [text "Try selecting a company"]
     companies   = div [] [ map, companyInfo ]
-    map         = div [id "mapid", floatLeft ] []
-    login       = div [] [renderLogin model.session model.loginInput]
+    map         = div [ id "mapid", floatLeft ] []
+    login       = div [] [ renderLogin model.session model.loginInput ]
     nav         = div [] [
       span [pointy, onClick (HomePage |> Pages)] [text "list"]
-      , span [] [text " | "]
+      , span [] [text " "]
       , span [pointy, onClick (CompanyAddPage |> Pages)] [text "+"]
     ]
   in
@@ -94,7 +100,7 @@ init =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  Sub.none
+  companyClick CompanyList
 
 main : Program Never
 main =

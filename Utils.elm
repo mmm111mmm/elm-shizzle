@@ -1,6 +1,7 @@
 module Utils exposing (..)
 
 import Http
+import Html.Attributes exposing (style)
 
 httpResponse : Http.Response -> (() -> (model, Cmd msg)) -> (() -> (model, Cmd msg)) -> (model, Cmd msg)
 httpResponse r success failure =
@@ -16,3 +17,7 @@ type RawHttp =
 type ResponseHttp a =
   Error Http.Error
   | ValueResponse a
+
+
+pointy      = style [("cursor", "pointer")]
+floatLeft   = style [("float", "left"), ("margin-right", "10px")]

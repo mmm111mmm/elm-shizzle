@@ -49,4 +49,5 @@ type Msg =
   | TechDel String
   | TechDelResponse RawHttp
 
+  | CompanyList String
   | CompanyListResponse (ResponseHttp (List Company))
