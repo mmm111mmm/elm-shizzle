@@ -16,7 +16,6 @@ type Pages =
   | CompanyAddPage
   | HomePage
 
-
 type CompanyInputData =
 
   Name String
@@ -27,7 +26,8 @@ type CompanyInputData =
 
 type TechInputData =
 
-  TechName String
+  TechAddToggle String
+  | TechName String
   | TechEnter Int String
 
 type Msg =

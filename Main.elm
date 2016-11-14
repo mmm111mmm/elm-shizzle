@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Html.App
-import Html exposing (Html, div, p, text, hr, span)
+import Html exposing (Html, div, p, text, hr, span, h5)
 import Html.Attributes exposing (id, style)
 import Html.Events exposing (onClick)
 import Utils exposing (pointy, floatLeft)
@@ -66,12 +66,13 @@ view model =
     addVis      = if model.page == "add" then "block" else "none"
     --companies  = div [] [renderCompany model.companies, map]
     companyIn   = model.companyListInput
+    techAddIn   = model.techAddInput
     company     = List.filter (\c -> c.id == companyIn.id) model.companies |> List.head
     companyInfo = case company of
       Just c ->
         div [ floatLeft ] [
-          div [] [ text ("Name: " ++ c.name) ]
-          , div [] [ text "Technologies", renderTech c.technologies c.id ]
+          h5 [] [ text (c.name) ]
+          , div [] [ text "Technologies", renderTech techAddIn c.technologies c.id ]
         ]
       Nothing ->
         div [] [text "Try selecting a company"]

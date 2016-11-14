@@ -41,10 +41,11 @@ initCompanyInputModel = CompanyInputModel "" "0" "0" ""
 
 
 type alias TechAddInputModel = {
-  name : String
+  techAddBox: String
+  , name : String
 }
 
-initTechAddInput = TechAddInputModel ""
+initTechAddInput = TechAddInputModel "" ""
 
 -- main display
 

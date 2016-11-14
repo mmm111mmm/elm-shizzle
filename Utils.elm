@@ -10,6 +10,14 @@ httpResponse r success failure =
     else
       failure ()
 
+httpResponse1 : Http.Response -> (() -> a) -> (() -> a) -> a
+httpResponse1 r success failure =
+    if r.status < 300 && r.status >= 200 then
+      success ()
+    else
+      failure ()
+
+
 type RawHttp =
   RawError Http.RawError
   | RawResponse Http.Response
