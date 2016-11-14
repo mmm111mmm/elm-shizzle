@@ -17,6 +17,28 @@
 <script src="main.js"></script>
 <script>
 
+      var myIcon = L.icon({
+      		iconUrl:       'res/images/marker-icon-orange.png',
+      		iconRetinaUrl: 'res/images/marker-icon-orange-2x.png',
+      		shadowUrl:     'res/images/marker-shadow.png',
+      		iconSize:    [25, 41],
+      		iconAnchor:  [12, 41],
+      		popupAnchor: [1, -34],
+      		tooltipAnchor: [16, -28],
+      		shadowSize:  [41, 41]
+      });
+
+      var blueIcon = L.icon({
+          iconUrl:       'res/images/marker-icon.png',
+          iconRetinaUrl: 'res/images/marker-icon-2x.png',
+          shadowUrl:     'res/images/marker-shadow.png',
+          iconSize:    [25, 41],
+          iconAnchor:  [12, 41],
+          popupAnchor: [1, -34],
+          tooltipAnchor: [16, -28],
+          shadowSize:  [41, 41]
+      });
+
     var node = document.getElementById('main');
     var app = Elm.Main.embed(node);
 
@@ -41,11 +63,19 @@
 
     app.ports.addLeafletPin.subscribe(addLeafletPin);
 
+    var markers = []
+
     function addLeafletPin(arg) {
       var [id, title, lat, lon] = arg
+
+
       var marker = L.marker([lat, lon]).addTo(mymap);
-      marker.bindPopup(title);//.openPopup();
-      marker.addEventListener("click", function() {
+      markers.push(marker)
+      marker.addEventListener("click", function(e) {
+        for(var i=0;i<markers.length;i++) {
+          markers[i].setIcon(blueIcon);
+        }
+        console.log(e.target.setIcon(myIcon))
         app.ports.companyClick.send(id);
       })
       mymap.panTo(new L.LatLng(53.483873, -2.237027));

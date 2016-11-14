@@ -1,6 +1,6 @@
 module Views.Company exposing (..)
 
-import Html exposing (Html, div, text, span, input, p, form, code)
+import Html exposing (Html, div, text, span, input, p, form, code, span)
 import Html.Events exposing (on, keyCode, onClick, onInput, onBlur)
 import Html.Attributes exposing (placeholder, style, type', name)
 import Model exposing (..)
@@ -42,7 +42,7 @@ renderTech techAddModel ts companyId =
            [ text " +" ]
       ]
     technologies = case ts of
-      Just t  -> List.map (\t -> div [] [code [] [text t.name], del t.id]) t
+      Just t  -> List.map (\t -> span [] [code [] [text t.name], del t.id]) t
       Nothing -> [div [] []]
   in
     div [style [("margin-left", "10px")] ] (List.append technologies [techInput companyId])

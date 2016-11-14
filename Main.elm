@@ -72,7 +72,7 @@ view model =
       Just c ->
         div [ floatLeft ] [
           h5 [] [ text (c.name) ]
-          , div [] [ text "Technologies", renderTech techAddIn c.technologies c.id ]
+          , div [] [ renderTech techAddIn c.technologies c.id ]
         ]
       Nothing ->
         div [] [text "Try selecting a company"]
