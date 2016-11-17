@@ -70,12 +70,13 @@ view model =
     company     = List.filter (\c -> c.id == companyIn.id) model.companies |> List.head
     companyInfo = case company of
       Just c ->
-        div [ floatLeft ] [
-          h5 [] [ text (c.name) ]
-          , div [] [ renderTech techAddIn c.technologies c.id ]
-        ]
+        div [ floatLeft ]
+            [
+              h5 [] [ text (c.name) ]
+              , div [] [ renderTech techAddIn c.technologies c.id ]
+            ]
       Nothing ->
-        div [] [text "Try selecting a company"]
+        div [ floatLeft ] [text "Try selecting a company"]
     companies   = div [] [ map, companyInfo ]
     map         = div [ id "mapid", floatLeft ] []
     login       = div [] [ renderLogin model.session model.loginInput ]
