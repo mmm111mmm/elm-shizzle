@@ -21,4 +21,7 @@ companiesUpdate input model =
 
 createLeafletPinCommands : List Company -> Cmd msg
 createLeafletPinCommands companies =
-  Cmd.batch (List.map (\c -> Leaflet.addLeafletPin (c.id, c.name, c.lat, c.lon)) companies)
+  let b =
+    Leaflet.addLeafletPin companies
+  in
+    Cmd.batch [b]

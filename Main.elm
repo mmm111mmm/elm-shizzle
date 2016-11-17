@@ -68,11 +68,12 @@ view model =
     companyIn   = model.companyListInput
     techAddIn   = model.techAddInput
     company     = List.filter (\c -> c.id == companyIn.id) model.companies |> List.head
+    delCompany id = span [ style [("cursor", "pointer")], onClick (id |> CompanyDel) ] [ text " ×" ]
     companyInfo = case company of
       Just c ->
         div [ floatLeft ]
             [
-              h5 [] [ text (c.name) ]
+              h5 [] [ text (c.name), delCompany c.id ]
               , div [] [ renderTech techAddIn c.technologies c.id ]
             ]
       Nothing ->

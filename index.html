@@ -61,24 +61,34 @@
 
     }
 
+    var markers = []
+    var oldSelected = 0
+
     app.ports.addLeafletPin.subscribe(addLeafletPin);
 
-    var markers = []
-
     function addLeafletPin(arg) {
-      var [id, title, lat, lon] = arg
+      var companies = arg
 
+      for(var i=0;i<markers.length;i++) {
+        mymap.removeLayer(markers[i])
+      }
 
-      var marker = L.marker([lat, lon]).addTo(mymap);
-      markers.push(marker)
-      marker.addEventListener("click", function(e) {
-        for(var i=0;i<markers.length;i++) {
-          markers[i].setIcon(blueIcon);
-        }
-        console.log(e.target.setIcon(myIcon))
-        app.ports.companyClick.send(id);
-      })
-      mymap.panTo(new L.LatLng(53.483873, -2.237027));
+      for(var i = 0; i < companies.length; i++) {
+        var company = companies[i]
+        var marker = L.marker([company.lat, company.lon]).addTo(mymap);
+        if(company.id == oldSelected) marker.setIcon(myIcon)
+        marker.companyId = company.id
+        markers.push(marker)
+        marker.addEventListener("click", function(e) {
+          for(var i=0;i<markers.length;i++) {
+            markers[i].setIcon(blueIcon);
+          }
+          e.target.setIcon(myIcon)
+          app.ports.companyClick.send(e.target.companyId);
+          oldSelected = e.target.companyId
+        })
+        mymap.panTo(new L.LatLng(53.483873, -2.237027));
+      }
     }
 
     app.ports.focusOnInput.subscribe(focusOn);
