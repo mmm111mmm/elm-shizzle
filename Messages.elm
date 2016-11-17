@@ -30,6 +30,11 @@ type TechInputData =
   | TechName String
   | TechEnter Int String
 
+type CompanyListInputData =
+
+  CompanySelect String
+  | CompanyNext
+
 type Msg =
 
   Pages Pages
@@ -49,5 +54,5 @@ type Msg =
   | TechDel String
   | TechDelResponse RawHttp
 
-  | CompanyList String
+  | CompanyList CompanyListInputData
   | CompanyListResponse (ResponseHttp (List Company))

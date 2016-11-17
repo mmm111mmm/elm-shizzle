@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Html.App
-import Html exposing (Html, div, p, text, hr, span, h5)
+import Html exposing (..)
 import Html.Attributes exposing (id, style)
 import Html.Events exposing (onClick)
 import Utils exposing (pointy, floatLeft)
@@ -65,21 +65,25 @@ view model =
     homeVis     = if model.page == "home" then "block" else "none"
     addVis      = if model.page == "add" then "block" else "none"
     --companies  = div [] [renderCompany model.companies, map]
-    companyIn   = model.companyListInput
     techAddIn   = model.techAddInput
-    company     = List.filter (\c -> c.id == companyIn.id) model.companies |> List.head
+    companyIn   = model.companyListInput
+    startOfList = List.head model.companies
+    startId     = case startOfList of
+      Just v  -> v.id
+      Nothing -> ""
+    selected    = if companyIn.id=="" then startId else companyIn.id
+    company     = List.filter (\c -> c.id == selected) model.companies |> List.head
     delCompany id = span [ style [("cursor", "pointer")], onClick (id |> CompanyDel) ] [ text " ×" ]
     companyInfo = case company of
       Just c ->
         div [ floatLeft ]
-            [
-              h5 [] [ text (c.name), delCompany c.id ]
+            [ button [ onClick (CompanyNext |> CompanyList ) ] [ text "next" ]
+              , h5 [] [ text (c.name), delCompany c.id ]
               , div [] [ renderTech techAddIn c.technologies c.id ]
             ]
       Nothing ->
         div [ floatLeft ] [text "Try selecting a company"]
-    companies   = div [] [ map, companyInfo ]
-    map         = div [ id "mapid", floatLeft ] []
+    companies   = div [] [ div [ id "mapid", floatLeft ] [], companyInfo ]
     login       = div [] [ renderLogin model.session model.loginInput ]
     nav         = div [] [
       span [pointy, onClick (HomePage |> Pages)] [text "list"]
@@ -103,7 +107,7 @@ init =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  companyClick CompanyList
+  companyClick (CompanySelect >> CompanyList)
 
 main : Program Never
 main =
