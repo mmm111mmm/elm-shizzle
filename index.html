@@ -49,7 +49,7 @@
     function setupLeaflet(b) {
       mymap = L.map('mapid', {
         center: [53.483873, -2.237027],
-        zoom: 15
+        zoom: 12
       });
 
     	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={token}', {
@@ -64,9 +64,22 @@
     var markers = []
     var oldSelected = 0
 
-    app.ports.addLeafletPin.subscribe(addLeafletPin);
+    app.ports.highlightMarker.subscribe(highlightMarker);
 
-    function addLeafletPin(arg) {
+    function highlightMarker(arg) {
+      for(var i=0;i<markers.length;i++) {
+        if(markers[i].companyId == arg) {
+          markers[i].setIcon(myIcon);
+          mymap.setView(new L.LatLng(markers[i].lat, markers[i].lon), 13, {"animate": true});
+        } else {
+          markers[i].setIcon(blueIcon);
+        }
+      }
+    }
+
+    app.ports.addLeafletPins.subscribe(addLeafletPins);
+
+    function addLeafletPins(arg) {
       var companies = arg
 
       for(var i=0;i<markers.length;i++) {
@@ -78,6 +91,8 @@
         var marker = L.marker([company.lat, company.lon]).addTo(mymap);
         if(company.id == oldSelected) marker.setIcon(myIcon)
         marker.companyId = company.id
+        marker.lat = company.lat
+        marker.lon = company.lon
         markers.push(marker)
         marker.addEventListener("click", function(e) {
           for(var i=0;i<markers.length;i++) {
@@ -87,8 +102,9 @@
           app.ports.companyClick.send(e.target.companyId);
           oldSelected = e.target.companyId
         })
-        mymap.panTo(new L.LatLng(53.483873, -2.237027));
       }
+      app.ports.companyClick.send(markers[0].companyId);
+      highlightMarker(markers[0].companyId)
     }
 
     app.ports.focusOnInput.subscribe(focusOn);

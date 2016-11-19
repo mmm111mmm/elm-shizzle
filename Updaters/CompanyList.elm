@@ -8,21 +8,26 @@ import Leaflet
 companyListUpdate : CompanyListInputData -> Model -> (Model, Cmd Msg)
 companyListUpdate input model =
   let
+    sids = Debug.log "a" <| List.sortWith (\c d -> if c.id > d.id then GT else LT ) model.companies
+    ids  = Debug.log "b" <| List.filter (\c -> c.id > companyListInput.id ) sids
+    head = List.head ids
+    next =
+      case head of
+        Just v  -> v.id
+        Nothing -> case List.head sids of
+          Just v  -> v.id
+          Nothing -> ""
     companyListInput = model.companyListInput
+    command          = case input of
+        CompanySelect companyId -> Cmd.none
+        CompanyNext             -> Leaflet.highlightMarker next
     update           = case input of
         CompanySelect companyId -> { companyListInput | id = companyId }
-        CompanyNext             ->
-          let
-            ids  = List.filter (\c -> c.id > companyListInput.id ) model.companies
-            sor  = List.sortWith (\c d -> if c.id > d.id then GT else LT ) ids
-            head = List.head sor
-          in
-            case head of
-              Just v  -> { companyListInput | id = v.id }
-              Nothing -> { companyListInput | id = "" }
+        CompanyNext             -> { companyListInput | id = next }
+
 
   in
-    ({ model | companyListInput = update }, Cmd.none)
+    ({ model | companyListInput = update }, command)
 
 
 companiesUpdate : ResponseHttp (List Company) -> Model -> (Model, Cmd Msg)
@@ -34,6 +39,6 @@ companiesUpdate input model =
 createLeafletPinCommands : List Company -> Cmd msg
 createLeafletPinCommands companies =
   let b =
-    Leaflet.addLeafletPin companies
+    Leaflet.addLeafletPins companies
   in
     Cmd.batch [b]
