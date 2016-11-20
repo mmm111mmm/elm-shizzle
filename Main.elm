@@ -61,7 +61,6 @@ pageUpdate msg model =
 view : Model -> Html Msg
 view model =
   let
-    loginVis    = if model.page == "login" then "block" else "none"
     homeVis     = if model.page == "home" then "block" else "none"
     addVis      = if model.page == "add" then "block" else "none"
     --companies  = div [] [renderCompany model.companies, map]
@@ -81,21 +80,16 @@ view model =
     delCompany id = span [ style [("cursor", "pointer")], onClick (id |> CompanyDel) ] [ text " ×" ]
     companies   = div [] [ div [ id "mapid", floatLeft ] [], companyInfo]
     login       = div [] [ renderLogin model.session model.loginInput ]
-    nav         = div [] [
-      span [pointy, onClick (HomePage |> Pages)] [text "list"]
-      , span [] [text " "]
-      , span [pointy, onClick (CompanyAddPage |> Pages)] [text "+"]
-    ]
-    popup       = div [ style (("background-color", "#000000bb")::("z-index", "500")::centerFlex) ] [
+    popupDisp   = ("display", "none")
+    popup       = div [ style (popupDisp::("background-color", "#000000bb")::("z-index", "500")::centerFlex) ] [
       login
       ]
   in
     div []
-        [ nav
-        , div [ style [ ("display", loginVis) ] ] [ login ]
-        , div [ style [ ("display", addVis) ] ] [ login, renderCompanyAdd model]
+        [
+        div [ style [ ("display", addVis) ] ] [ renderCompanyAdd model]
         , div [ style [ ("display", homeVis) ] ] [ companies ]
-        , popup
+        , div [ style [ popupDisp ] ] [ popup ]
         ]
 
 
