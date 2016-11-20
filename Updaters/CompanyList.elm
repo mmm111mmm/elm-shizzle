@@ -8,8 +8,8 @@ import Leaflet
 companyListUpdate : CompanyListInputData -> Model -> (Model, Cmd Msg)
 companyListUpdate input model =
   let
-    sids = Debug.log "a" <| List.sortWith (\c d -> if c.id > d.id then GT else LT ) model.companies
-    ids  = Debug.log "b" <| List.filter (\c -> c.id > companyListInput.id ) sids
+    sids = List.sortWith (\c d -> if c.id > d.id then GT else LT ) model.companies
+    ids  = List.filter (\c -> c.id > companyListInput.id ) sids
     head = List.head ids
     next =
       case head of

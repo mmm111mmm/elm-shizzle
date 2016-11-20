@@ -4,7 +4,7 @@ import Html.App
 import Html exposing (..)
 import Html.Attributes exposing (id, style)
 import Html.Events exposing (onClick)
-import Utils exposing (pointy, floatLeft)
+import Utils exposing (..)
 import Messages exposing (..)
 import Model exposing (Model, initModel)
 import Requests exposing (fetchCompanies)
@@ -67,13 +67,8 @@ view model =
     --companies  = div [] [renderCompany model.companies, map]
     techAddIn   = model.techAddInput
     companyIn   = model.companyListInput
-    startOfList = List.head model.companies
-    startId     = case startOfList of
-      Just v  -> v.id
-      Nothing -> ""
-    selected    = if companyIn.id=="" then startId else companyIn.id
+    selected    = companyIn.id
     company     = List.filter (\c -> c.id == selected) model.companies |> List.head
-    delCompany id = span [ style [("cursor", "pointer")], onClick (id |> CompanyDel) ] [ text " ×" ]
     companyInfo = case company of
       Just c ->
         div [ floatLeft ]
@@ -83,19 +78,24 @@ view model =
             ]
       Nothing ->
         div [ floatLeft ] [text "Try selecting a company"]
-    companies   = div [] [ div [ id "mapid", floatLeft ] [], companyInfo ]
+    delCompany id = span [ style [("cursor", "pointer")], onClick (id |> CompanyDel) ] [ text " ×" ]
+    companies   = div [] [ div [ id "mapid", floatLeft ] [], companyInfo]
     login       = div [] [ renderLogin model.session model.loginInput ]
     nav         = div [] [
       span [pointy, onClick (HomePage |> Pages)] [text "list"]
       , span [] [text " "]
       , span [pointy, onClick (CompanyAddPage |> Pages)] [text "+"]
     ]
+    popup       = div [ style (("background-color", "#000000bb")::("z-index", "500")::centerFlex) ] [
+      login
+      ]
   in
     div []
         [ nav
         , div [ style [ ("display", loginVis) ] ] [ login ]
         , div [ style [ ("display", addVis) ] ] [ login, renderCompanyAdd model]
         , div [ style [ ("display", homeVis) ] ] [ companies ]
+        , popup
         ]
 
 

@@ -29,3 +29,4 @@ type ResponseHttp a =
 
 pointy      = style [("cursor", "pointer")]
 floatLeft   = style [("float", "left"), ("margin-right", "10px")]
+centerFlex  = [("display", "flex"), ("flex-direction", "column"), ("justify-content", "center"), ("align-items", "center"), ("height", "100%"), ("width", "100%"), ("position","absolute")]

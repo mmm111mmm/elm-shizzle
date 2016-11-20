@@ -1,6 +1,6 @@
 module Views.Login exposing (renderLogin)
 
-import Html exposing (Html, span, div, text, button, input, p)
+import Html exposing (..)
 import Html.Events exposing (onClick, onInput)
 import Html.Attributes exposing (placeholder, style, type')
 import Model exposing (Model, LoginInputModel)
@@ -12,8 +12,9 @@ renderLogin session model =
   if session /= "" then
     span [] []
   else
-    div [] [
-        div []
+    div [ style [("padding", "20px"),("background", "white")] ] [
+        h5 [] [ text "Please login"]
+        , div []
             [
               input [ placeholder "username", type' "text", onInput (Username >> Login) ] []
             ]
