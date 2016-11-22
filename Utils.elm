@@ -16,7 +16,7 @@ httpResponse1 r success failure =
       success ()
     else
       failure ()
-
+      
 
 type RawHttp =
   RawError Http.RawError
@@ -27,6 +27,7 @@ type ResponseHttp a =
   | ValueResponse a
 
 
-pointy      = style [("cursor", "pointer")]
+pointy      = style [pointerTuple]
+pointerTuple  = ("cursor", "pointer")
 floatLeft   = style [("float", "left"), ("margin-right", "10px")]
 centerFlex  = [("display", "flex"), ("flex-direction", "column"), ("justify-content", "center"), ("align-items", "center"), ("height", "100%"), ("width", "100%"), ("position","absolute")]

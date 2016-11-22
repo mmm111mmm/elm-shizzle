@@ -21,8 +21,12 @@ companyAddUpdate input model =
       case input of
         CompanyAddPress -> addCompany model.session companyAddModel
         _               -> Cmd.none
+    showAddDialog =
+      case input of
+        CompanyAddShow -> "showAdd"
+        _              -> ""
   in
-    ( { model | companyInput = updatedModel }, command )
+    ( { model | companyInput = updatedModel, page=showAddDialog }, command )
 
 companyAddResponseUpdate : RawHttp -> Model -> (Model, Cmd Msg)
 companyAddResponseUpdate input model =

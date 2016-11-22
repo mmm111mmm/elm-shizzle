@@ -9,12 +9,8 @@ type LoginInputData =
   | Password String
   | LoginPress
   | LoginPressInvalid
-
-type Pages =
-
-  LoginPage
-  | CompanyAddPage
-  | HomePage
+  | LoginClose
+  | LoginOpen
 
 type CompanyInputData =
 
@@ -23,6 +19,7 @@ type CompanyInputData =
   | Lon String
   | Postcode String
   | CompanyAddPress
+  | CompanyAddShow
 
 type TechInputData =
 
@@ -37,9 +34,7 @@ type CompanyListInputData =
 
 type Msg =
 
-  Pages Pages
-
-  | Login LoginInputData
+  Login LoginInputData
   | LoginResponse (ResponseHttp String)
 
   | CompanyAdd CompanyInputData

@@ -26,9 +26,10 @@ type alias LoginInputModel = {
   username : String
   , password : String
   , loginPressInvalid: Bool
+  , showLogin: Bool
 }
 
-initLoginInputModel = LoginInputModel "" "" False
+initLoginInputModel = LoginInputModel "" "" False False
 
 type alias CompanyInputModel = {
   name: String

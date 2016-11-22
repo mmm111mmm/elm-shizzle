@@ -29,8 +29,6 @@ update msg model =
      _ = Debug.log "msg!" msg
   in
     case msg of
-      Pages msg                 -> pageUpdate msg model
-
       Login msg                 -> loginUpdate msg model
       LoginResponse msg         -> loginResponseUpdate msg model
 
@@ -51,27 +49,22 @@ update msg model =
 
 --
 
-pageUpdate msg model =
-  case msg of
-    LoginPage      -> ( {model | page = "login" }, Cmd.none)
-    HomePage       -> ( {model | page = "home" }, Cmd.batch [
-      fetchCompanies])
-    CompanyAddPage -> ( {model | page = "add" }, Cmd.none)
-
 view : Model -> Html Msg
 view model =
   let
+    _ = Debug.log "model" model
     homeVis     = if model.page == "home" then "block" else "none"
     addVis      = if model.page == "add" then "block" else "none"
-    --companies  = div [] [renderCompany model.companies, map]
     techAddIn   = model.techAddInput
     companyIn   = model.companyListInput
+    loginIn     = model.loginInput
     selected    = companyIn.id
     company     = List.filter (\c -> c.id == selected) model.companies |> List.head
     companyInfo = case company of
       Just c ->
         div [ floatLeft ]
             [ button [ onClick (CompanyNext |> CompanyList ) ] [ text "next" ]
+              , button [ onClick <| shouldOpenLogin model ] [ text "add" ]
               , h5 [] [ text (c.name), delCompany c.id ]
               , div [] [ renderTech techAddIn c.technologies c.id ]
             ]
@@ -79,25 +72,32 @@ view model =
         div [ floatLeft ] [text "Try selecting a company"]
     delCompany id = span [ style [("cursor", "pointer")], onClick (id |> CompanyDel) ] [ text " ×" ]
     companies   = div [] [ div [ id "mapid", floatLeft ] [], companyInfo]
-    login       = div [] [ renderLogin model.session model.loginInput ]
-    popupDisp   = ("display", "none")
-    popup       = div [ style (popupDisp::("background-color", "#000000bb")::("z-index", "500")::centerFlex) ] [
-      login
-      ]
+    login       = div [] [ renderLogin model.session loginIn ]
+    popupDisp   = if loginIn.showLogin || model.page == "showAdd" then ("display", "block") else ("display", "none")
+    popup       =
+      if model.page == "showAdd" then
+        div [ style (popupDisp::("background-color", "#000000bb")::("z-index", "1000")::centerFlex) ] [ renderCompanyAdd model ]
+      else
+        div [ style (popupDisp::("background-color", "#000000bb")::("z-index", "1000")::centerFlex) ] [ login ]
+
   in
     div []
         [
-        div [ style [ ("display", addVis) ] ] [ renderCompanyAdd model]
-        , div [ style [ ("display", homeVis) ] ] [ companies ]
+        div [ style [ ] ] [ companies ]
         , div [ style [ popupDisp ] ] [ popup ]
         ]
 
+shouldOpenLogin model =
+  if model.session == "" then
+    LoginOpen |> Login
+  else
+    CompanyAddShow |> CompanyAdd
 
 -- Subs and main
 
 init : (Model, Cmd Msg)
 init =
-  (initModel, Cmd.batch [Task.perform Pages Pages (Task.succeed HomePage), Leaflet.setupLeaflet True])
+  (initModel, Cmd.batch [Leaflet.setupLeaflet True, fetchCompanies])
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
