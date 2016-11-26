@@ -6,7 +6,7 @@ import Html.Attributes exposing (id, style)
 import Html.Events exposing (onClick)
 import Utils exposing (..)
 import Messages exposing (..)
-import Model exposing (Model, initModel)
+import Model.Model exposing (Model, initModel)
 import Requests exposing (fetchCompanies)
 import Task
 
@@ -47,51 +47,55 @@ update msg model =
       CompanyList msg           -> companyListUpdate msg model
       CompanyListResponse msg   -> companiesUpdate msg model
 
+      ShowPopup b               -> ({model | showPopup = b}, Cmd.none)
+
 --
 
 view : Model -> Html Msg
 view model =
   let
-    _ = Debug.log "model" model
-    homeVis     = if model.page == "home" then "block" else "none"
-    addVis      = if model.page == "add" then "block" else "none"
-    techAddIn   = model.techAddInput
+    --_ = Debug.log "model" model
     companyIn   = model.companyListInput
-    loginIn     = model.loginInput
     selected    = companyIn.id
     company     = List.filter (\c -> c.id == selected) model.companies |> List.head
     companyInfo = case company of
       Just c ->
         div [ floatLeft ]
-            [ button [ onClick (CompanyNext |> CompanyList ) ] [ text "next" ]
-              , button [ onClick <| shouldOpenLogin model ] [ text "add" ]
+            [ button [ onClick (CompanyNext |> CompanyList) ] [ text "next" ]
+              , button [ onClick (ShowPopup True) ] [ text "add" ]
               , h5 [] [ text (c.name), delCompany c.id ]
-              , div [] [ renderTech techAddIn c.technologies c.id ]
+              , div [] [ renderTech model.techAddInput c.technologies c.id ]
             ]
       Nothing ->
         div [ floatLeft ] [text "Try selecting a company"]
     delCompany id = span [ style [("cursor", "pointer")], onClick (id |> CompanyDel) ] [ text " ×" ]
     companies   = div [] [ div [ id "mapid", floatLeft ] [], companyInfo]
-    login       = div [] [ renderLogin model.session loginIn ]
-    popupDisp   = if loginIn.showLogin || model.page == "showAdd" then ("display", "block") else ("display", "none")
-    popup       =
-      if model.page == "showAdd" then
-        div [ style (popupDisp::("background-color", "#000000bb")::("z-index", "1000")::centerFlex) ] [ renderCompanyAdd model ]
-      else
-        div [ style (popupDisp::("background-color", "#000000bb")::("z-index", "1000")::centerFlex) ] [ login ]
-
   in
     div []
         [
-        div [ style [ ] ] [ companies ]
-        , div [ style [ popupDisp ] ] [ popup ]
+        div [ style [] ] [ companies ]
+        , div [] [ showPopup model.showPopup model ]
         ]
 
-shouldOpenLogin model =
-  if model.session == "" then
-    LoginOpen |> Login
-  else
-    CompanyAddShow |> CompanyAdd
+
+showPopup shouldShow model =
+  let htmlElement  =
+    if model.session == "" then
+      div [] [ renderLogin model.session model.loginInput ]
+    else
+      renderCompanyAdd model
+  in
+    if shouldShow then
+      div [ style (("background-color", "#000000bb")::("z-index", "1000")::centerFlex) ]
+      [
+        div [ style [("padding", "20px"),("background", "white")]] [
+          div [ floatRight, onClick <| ShowPopup False] [ text "x" ]
+          , htmlElement
+        ]
+      ]
+    else
+      span [] []
+
 
 -- Subs and main
 

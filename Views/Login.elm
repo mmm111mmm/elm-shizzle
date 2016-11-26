@@ -3,17 +3,16 @@ module Views.Login exposing (renderLogin)
 import Html exposing (..)
 import Html.Events exposing (onClick, onInput)
 import Html.Attributes exposing (placeholder, style, type')
-import Model exposing (Model, LoginInputModel)
+import Model.Model exposing (Model, LoginInputModel)
 import Messages exposing (Msg(Login), LoginInputData(..))
 import String exposing (trim, length)
 import Utils exposing (..)
 
 renderLogin: String -> LoginInputModel -> Html Msg
 renderLogin session model =
-  div [ style [("padding", "20px"),("background", "white")] ] [
+  div [] [
       div [] [
         h5 [ style [("display", "inline-block")] ] [ text "Please login"]
-        , span [ style [("float", "right"), pointerTuple], onClick (LoginClose |> Login) ] [ text " x" ]
       ]
       , div []
           [
@@ -47,5 +46,6 @@ eitherLoginOrPassEmpty model =
   let
     userLength = trim model.username |> length
     passLength = trim model.password |> length
+    empty      = userLength == 0 || passLength == 0
   in
-    userLength == 0 || passLength == 0
+    empty

@@ -1,6 +1,6 @@
 module Messages exposing (..)
 
-import Model exposing (Company)
+import Model.Company exposing (Company)
 import Utils exposing (ResponseHttp, RawHttp)
 
 type LoginInputData =
@@ -9,8 +9,6 @@ type LoginInputData =
   | Password String
   | LoginPress
   | LoginPressInvalid
-  | LoginClose
-  | LoginOpen
 
 type CompanyInputData =
 
@@ -19,7 +17,6 @@ type CompanyInputData =
   | Lon String
   | Postcode String
   | CompanyAddPress
-  | CompanyAddShow
 
 type TechInputData =
 
@@ -34,7 +31,9 @@ type CompanyListInputData =
 
 type Msg =
 
-  Login LoginInputData
+  ShowPopup Bool
+
+  | Login LoginInputData
   | LoginResponse (ResponseHttp String)
 
   | CompanyAdd CompanyInputData

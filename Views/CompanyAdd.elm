@@ -1,9 +1,9 @@
 module Views.CompanyAdd exposing (renderCompanyAdd)
 
-import Html exposing (Html, div, text, button, input, span)
+import Html exposing (..)
 import Html.Events exposing (onClick, onInput)
 import Html.Attributes exposing (placeholder, type')
-import Model exposing (Model, LoginInputModel)
+import Model.Model exposing (Model, LoginInputModel)
 import Messages exposing (Msg(CompanyAdd), CompanyInputData(..))
 
 renderCompanyAdd : Model -> Html Msg
@@ -12,7 +12,8 @@ renderCompanyAdd model =
     span [] []
   else
     div [] [
-        div []
+        h5 [] [text "Add company"]
+        , div []
             [
               input [ onInput (Name >> CompanyAdd), type' "text", placeholder "name"] []
             ]

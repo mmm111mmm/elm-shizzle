@@ -1,6 +1,6 @@
 module Updaters.TechAdd exposing (..)
 
-import Model exposing (Model, TechAddInputModel)
+import Model.Model exposing (Model, TechAddInputModel)
 import Messages exposing (Msg, TechInputData(..))
 import Requests exposing (fetchCompanies, addTech)
 import Utils exposing (..)

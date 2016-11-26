@@ -1,10 +1,10 @@
 module Requests exposing (..)
 
 import Task
-import Model exposing (..)
+import Model.Model exposing (..)
 import Http exposing (..)
 import Json.Decode as Json exposing (..)
-import Model exposing (..)
+import Model.Company exposing (..)
 import Messages exposing (..)
 import Utils exposing (..)
 

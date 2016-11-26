@@ -1,6 +1,6 @@
 module Updaters.CompanyDel exposing (..)
 
-import Model exposing (Model)
+import Model.Model exposing (Model)
 import Messages exposing (Msg(..))
 import Requests exposing (delCompany, fetchCompanies)
 import Utils exposing (RawHttp(..), httpResponse)

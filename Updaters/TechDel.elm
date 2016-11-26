@@ -1,6 +1,6 @@
 module Updaters.TechDel exposing (..)
 
-import Model exposing (Model, TechAddInputModel)
+import Model.Model exposing (Model, TechAddInputModel)
 import Messages exposing (Msg, TechInputData(..))
 import Requests exposing (delTech, fetchCompanies)
 import Utils exposing (RawHttp(..), httpResponse)

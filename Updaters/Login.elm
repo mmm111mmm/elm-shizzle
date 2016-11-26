@@ -1,6 +1,6 @@
 module Updaters.Login exposing (..)
 
-import Model exposing (Model, LoginInputModel)
+import Model.Model exposing (Model, LoginInputModel)
 import Messages exposing (Msg, LoginInputData(..))
 import Requests exposing (loginFn)
 import Utils exposing (ResponseHttp(..))
@@ -15,8 +15,6 @@ loginUpdate input model =
         Username s        -> { loginModel | username = s }
         Password s        -> { loginModel | password = s }
         LoginPressInvalid -> { loginModel | loginPressInvalid = True }
-        LoginClose        -> { loginModel | showLogin = False }
-        LoginOpen         -> { loginModel | showLogin = True }
         _                 -> loginModel
     command =
       case input of
@@ -34,7 +32,4 @@ loginResponseUpdate input model =
     case input of
       Error e         -> ( model, Cmd.none )
       ValueResponse s ->
-        let loginModelUpdated =
-          { loginModel | showLogin = False }
-        in
-          ( { model | session = s, loginInput = loginModelUpdated }, Cmd.none )
+        ( { model | session = s }, Cmd.none )

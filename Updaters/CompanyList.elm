@@ -1,6 +1,7 @@
 module Updaters.CompanyList exposing (..)
 
-import Model exposing (Model, Company)
+import Model.Model exposing (..)
+import Model.Company exposing (..)
 import Messages exposing (..)
 import Utils exposing (ResponseHttp(..))
 import Leaflet

@@ -1,6 +1,6 @@
 module Updaters.CompanyAdd exposing (..)
 
-import Model exposing (Model, CompanyInputModel)
+import Model.Model exposing (Model, CompanyInputModel)
 import Messages exposing (Msg, CompanyInputData(..))
 import Requests exposing (addCompany, fetchCompanies)
 import Utils exposing (RawHttp(..), httpResponse)
@@ -21,12 +21,8 @@ companyAddUpdate input model =
       case input of
         CompanyAddPress -> addCompany model.session companyAddModel
         _               -> Cmd.none
-    showAddDialog =
-      case input of
-        CompanyAddShow -> "showAdd"
-        _              -> ""
   in
-    ( { model | companyInput = updatedModel, page=showAddDialog }, command )
+    ( { model | companyInput = updatedModel }, command )
 
 companyAddResponseUpdate : RawHttp -> Model -> (Model, Cmd Msg)
 companyAddResponseUpdate input model =
