@@ -23,8 +23,8 @@ import Updaters.TechAdd exposing (techAddUpdate, techAddResponseUpdate)
 import Updaters.TechDel exposing (techDelUpdate, techDelResponseUpdate)
 import Updaters.CompanyList exposing (companiesUpdate, companyListUpdate)
 
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
+updateInputResponse : Msg -> Model -> ( Model, Cmd Msg )
+updateInputResponse msg model =
   let
      _ = Debug.log "msg!" msg
   in
@@ -47,7 +47,26 @@ update msg model =
       CompanyList msg           -> companyListUpdate msg model
       CompanyListResponse msg   -> companiesUpdate msg model
 
-      ShowPopup b               -> ({model | showPopup = b}, Cmd.none)
+      _                         -> (model, Cmd.none)
+
+updateUi : Msg -> (Model, Cmd Msg) -> (Model, Cmd Msg)
+updateUi msg modelAndCmd =
+  let
+    model =
+      fst modelAndCmd
+    companyListInput =
+      model.companyListInput
+  in
+    case msg of
+      ShowPopup b                          -> ({model | showPopup = b}, Cmd.none)
+      CompanyAddResponse (ValueResponse r) -> ( {model | showPopup = False}, snd modelAndCmd )
+      CompanyDelResponse (RawResponse r) ->
+        let
+          updatedCompanyListInput =
+            {companyListInput | id = ""}
+        in
+          ( {model | showPopup = False, companyListInput = updatedCompanyListInput}, snd modelAndCmd )
+      _                                    -> modelAndCmd
 
 --
 
@@ -112,6 +131,7 @@ main =
   Html.App.program
     { init = init
     , view = view
-    , update = update
+    , update = \msg model ->
+      updateInputResponse msg model |> updateUi msg
     , subscriptions = subscriptions
     }

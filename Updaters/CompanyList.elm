@@ -25,21 +25,23 @@ companyListUpdate input model =
     update           = case input of
         CompanySelect companyId -> { companyListInput | id = companyId }
         CompanyNext             -> { companyListInput | id = next }
-
-
   in
     ({ model | companyListInput = update }, command)
 
 
 companiesUpdate : ResponseHttp (List Company) -> Model -> (Model, Cmd Msg)
 companiesUpdate input model =
-  case input of
-    Error e         -> ( model, Cmd.none )
-    ValueResponse c -> ( { model | companies = c }, createLeafletPinCommands c )
-
-createLeafletPinCommands : List Company -> Cmd msg
-createLeafletPinCommands companies =
-  let b =
-    Leaflet.addLeafletPins companies
+  let
+    companyListInput =
+      model.companyListInput
   in
-    Cmd.batch [b]
+    case input of
+      Error e         -> ( model, Cmd.none )
+      ValueResponse c -> ( { model | companies = c }, createLeafletPinCommands c companyListInput.id )
+
+createLeafletPinCommands : List Company -> String -> Cmd msg
+createLeafletPinCommands companies selected =
+  let pins =
+    Leaflet.addLeafletPins (companies, selected)
+  in
+    pins

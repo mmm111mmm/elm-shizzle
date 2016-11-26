@@ -80,7 +80,8 @@
     app.ports.addLeafletPins.subscribe(addLeafletPins);
 
     function addLeafletPins(arg) {
-      var companies = arg
+      var companies = arg[0]
+      var shouldSelected = arg[1]
 
       for(var i=0;i<markers.length;i++) {
         mymap.removeLayer(markers[i])
@@ -103,8 +104,10 @@
           oldSelected = e.target.companyId
         })
       }
-      app.ports.companyClick.send(markers[0].companyId);
-      highlightMarker(markers[0].companyId)
+      var cId = markers[0].companyId
+      if(shouldSelected!="") cId = shouldSelected
+      app.ports.companyClick.send(cId);
+      highlightMarker(cId)
     }
 
     app.ports.focusOnInput.subscribe(focusOn);

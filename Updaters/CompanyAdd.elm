@@ -3,7 +3,7 @@ module Updaters.CompanyAdd exposing (..)
 import Model.Model exposing (Model, CompanyInputModel)
 import Messages exposing (Msg, CompanyInputData(..))
 import Requests exposing (addCompany, fetchCompanies)
-import Utils exposing (RawHttp(..), httpResponse)
+import Utils exposing (..)
 
 companyAddUpdate : CompanyInputData -> Model -> (Model, Cmd Msg)
 companyAddUpdate input model =
@@ -24,8 +24,16 @@ companyAddUpdate input model =
   in
     ( { model | companyInput = updatedModel }, command )
 
-companyAddResponseUpdate : RawHttp -> Model -> (Model, Cmd Msg)
+companyAddResponseUpdate : ResponseHttp Int -> Model -> (Model, Cmd Msg)
 companyAddResponseUpdate input model =
-  case input of
-    RawError e    -> (model, Cmd.none)
-    RawResponse r -> httpResponse r (\_ -> (model, fetchCompanies) ) (\_ -> (model, Cmd.none) )
+  let companyListInput =
+    model.companyListInput
+  in
+    case input of
+      Error e         -> (model, Cmd.none)
+      ValueResponse r ->
+        let
+          updated =
+            {companyListInput | id = toString r}
+        in
+          ({model | companyListInput = updated}, fetchCompanies)

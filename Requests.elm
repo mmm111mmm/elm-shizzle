@@ -20,20 +20,20 @@ fetchCompanies : Cmd Msg
 fetchCompanies = companyList (Error >> CompanyListResponse) (ValueResponse >> CompanyListResponse)
 
 
-companyAdd : String -> CompanyInputModel -> (Http.RawError -> a) -> (Http.Response -> a) -> Cmd a
+companyAdd : String -> CompanyInputModel -> (Http.Error -> a) -> (Int -> a) -> Cmd a
 companyAdd session d fail succeed =
   let body = Http.string ("""{"name":"""++toString d.name++""", "lat": """++d.lat++""", "lon":"""++d.lon++""", "postcode":"""++toString d.postcode++""", "technologies": []}""")
       url  = "http://localhost:8901/company/insert"
       hs   = [ ("Content-Type", "application/json"), ("session", session) ]
       req  = Http.Request "POST" hs url body
-      send = Http.send Http.defaultSettings req
+      send = Http.fromJson Json.int (Http.send Http.defaultSettings req)
   in
     Task.perform fail succeed <| send
 
 addCompany : String -> CompanyInputModel -> Cmd Msg
 addCompany = \sess input -> companyAdd sess input
-  (RawError >> CompanyAddResponse)
-  (RawResponse >> CompanyAddResponse)
+  (Error >> CompanyAddResponse)
+  (ValueResponse >> CompanyAddResponse)
 
 
 companyDel : String -> String -> (Http.RawError -> a) -> (Http.Response -> a) -> Cmd a

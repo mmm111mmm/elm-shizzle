@@ -37,7 +37,7 @@ type Msg =
   | LoginResponse (ResponseHttp String)
 
   | CompanyAdd CompanyInputData
-  | CompanyAddResponse RawHttp
+  | CompanyAddResponse (ResponseHttp Int)
 
   | CompanyDel String
   | CompanyDelResponse RawHttp
