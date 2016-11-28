@@ -2,6 +2,8 @@ module Utils exposing (..)
 
 import Http
 import Html.Attributes exposing (style)
+import Html exposing (..)
+import Html.Events exposing (..)
 
 httpResponse : Http.Response -> (() -> (model, Cmd msg)) -> (() -> (model, Cmd msg)) -> (model, Cmd msg)
 httpResponse r success failure =
@@ -17,6 +19,17 @@ httpResponse1 r success failure =
     else
       failure ()
 
+popup shouldShow htmlElement msg =
+  if shouldShow then
+    div [ style (("background-color", "rgba(0, 0, 0, 0.48)")::("z-index", "1000")::centerFlex) ]
+    [
+      div [ style [("padding", "20px"),("background", "white")]] [
+        div [ floatRight, onClick msg ] [ text "x" ]
+        , htmlElement
+      ]
+    ]
+  else
+    span [] []
 
 type RawHttp =
   RawError Http.RawError

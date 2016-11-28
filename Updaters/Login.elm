@@ -15,6 +15,7 @@ loginUpdate input model =
         Username s        -> { loginModel | username = s }
         Password s        -> { loginModel | password = s }
         LoginPressInvalid -> { loginModel | loginPressInvalid = True }
+        LoginShow b       -> { loginModel | loginShow = b }
         _                 -> loginModel
     command =
       case input of
@@ -28,8 +29,10 @@ loginResponseUpdate input model =
   let
     loginModel  =
       model.loginInput
+    updated =
+      { loginModel | loginShow = False}
   in
     case input of
       Error e         -> ( model, Cmd.none )
       ValueResponse s ->
-        ( { model | session = s }, Cmd.none )
+        ( { model | session = s, loginInput = updated }, Cmd.none )

@@ -47,25 +47,34 @@ updateInputResponse msg model =
       CompanyList msg           -> companyListUpdate msg model
       CompanyListResponse msg   -> companiesUpdate msg model
 
-      _                         -> (model, Cmd.none)
-
 updateUi : Msg -> (Model, Cmd Msg) -> (Model, Cmd Msg)
 updateUi msg modelAndCmd =
   let
-    model =
-      fst modelAndCmd
-    companyListInput =
-      model.companyListInput
+    model = fst modelAndCmd
+    login = model.loginInput
+    companyListInput = model.companyListInput
+    companyAdd = model.companyInput
   in
     case msg of
-      ShowPopup b                          -> ({model | showPopup = b}, Cmd.none)
-      CompanyAddResponse (ValueResponse r) -> ( {model | showPopup = False}, snd modelAndCmd )
-      CompanyDelResponse (RawResponse r) ->
+      CompanyAdd (CompanyAddShow True)     ->
+        let updatedLogin =
+          if model.session == "" then
+            { login | loginShow = True }
+          else
+            { login | loginShow = False }
+        in
+        ( { model | loginInput = updatedLogin }, snd modelAndCmd )
+      Login (LoginShow False)              ->
+        let updatedComapanyAdd =
+          { companyAdd | companyAddShow = False }
+        in
+          ( { model | companyInput = updatedComapanyAdd }, snd modelAndCmd )
+      CompanyDelResponse (RawResponse r)   ->
         let
           updatedCompanyListInput =
-            {companyListInput | id = ""}
+            { companyListInput | id = "" }
         in
-          ( {model | showPopup = False, companyListInput = updatedCompanyListInput}, snd modelAndCmd )
+          ( {model | companyListInput = updatedCompanyListInput}, snd modelAndCmd )
       _                                    -> modelAndCmd
 
 --
@@ -73,15 +82,17 @@ updateUi msg modelAndCmd =
 view : Model -> Html Msg
 view model =
   let
-    --_ = Debug.log "model" model
+    -- _ = Debug.log "model" model
     companyIn   = model.companyListInput
+    loginIn     = model.loginInput
     selected    = companyIn.id
     company     = List.filter (\c -> c.id == selected) model.companies |> List.head
+    companyAdd  = model.companyInput
     companyInfo = case company of
       Just c ->
         div [ floatLeft ]
             [ button [ onClick (CompanyNext |> CompanyList) ] [ text "next" ]
-              , button [ onClick (ShowPopup True) ] [ text "add" ]
+              , button [ onClick (CompanyAddShow True |> CompanyAdd) ] [ text "add" ]
               , h5 [] [ text (c.name), delCompany c.id ]
               , div [] [ renderTech model.techAddInput c.technologies c.id ]
             ]
@@ -93,28 +104,13 @@ view model =
     div []
         [
         div [ style [] ] [ companies ]
-        , div [] [ showPopup model.showPopup model ]
+        , if loginIn.loginShow then
+          div [] [ Utils.popup True (renderLogin model.session loginIn) (LoginShow False |> Login) ]
+        else if companyAdd.companyAddShow then
+          div [] [ span [] [], Utils.popup True (renderCompanyAdd model) (CompanyAddShow False |> CompanyAdd) ]
+        else
+          span [] []
         ]
-
-
-showPopup shouldShow model =
-  let htmlElement  =
-    if model.session == "" then
-      div [] [ renderLogin model.session model.loginInput ]
-    else
-      renderCompanyAdd model
-  in
-    if shouldShow then
-      div [ style (("background-color", "#000000bb")::("z-index", "1000")::centerFlex) ]
-      [
-        div [ style [("padding", "20px"),("background", "white")]] [
-          div [ floatRight, onClick <| ShowPopup False] [ text "x" ]
-          , htmlElement
-        ]
-      ]
-    else
-      span [] []
-
 
 -- Subs and main
 

@@ -21,7 +21,6 @@ import Json.Decode as Json
 renderTech : TechAddInputModel -> Maybe (List Technology) -> String -> Html Msg
 renderTech techAddModel ts companyId =
   let
-    _ = Debug.log "model" techAddModel
     codeToMsg        = Json.map (\k -> TechEnter k companyId |> TechAdd) keyCode
     del companyId    = span [ style [("cursor", "pointer")], onClick (companyId |> TechDel) ] [ text " ×" ]
     showTechAdd      = if companyId == techAddModel.techAddBox then ("display","none") else ("display","block")

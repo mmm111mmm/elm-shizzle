@@ -9,6 +9,8 @@ type LoginInputData =
   | Password String
   | LoginPress
   | LoginPressInvalid
+  | LoginShow Bool
+
 
 type CompanyInputData =
 
@@ -17,6 +19,7 @@ type CompanyInputData =
   | Lon String
   | Postcode String
   | CompanyAddPress
+  | CompanyAddShow Bool
 
 type TechInputData =
 
@@ -31,9 +34,7 @@ type CompanyListInputData =
 
 type Msg =
 
-  ShowPopup Bool
-
-  | Login LoginInputData
+  Login LoginInputData
   | LoginResponse (ResponseHttp String)
 
   | CompanyAdd CompanyInputData

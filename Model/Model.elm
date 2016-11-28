@@ -7,7 +7,6 @@ import Model.Company exposing (..)
 type alias Model = {
   page:           String
   , session:      String
-  , showPopup:    Bool
   , loginInput:   LoginInputModel
   , companyInput: CompanyInputModel
   , techAddInput: TechAddInputModel
@@ -15,7 +14,7 @@ type alias Model = {
   , companies:    List Company
 }
 
-initModel = Model "home" "" False initLoginInputModel initCompanyInputModel initTechAddInput initCompanyListInputModel []
+initModel = Model "home" "" initLoginInputModel initCompanyInputModel initTechAddInput initCompanyListInputModel []
 
 -- input
 
@@ -29,18 +28,20 @@ type alias LoginInputModel = {
   username : String
   , password : String
   , loginPressInvalid: Bool
+  , loginShow: Bool
 }
 
-initLoginInputModel = LoginInputModel "" "" False
+initLoginInputModel = LoginInputModel "" "" False False
 
 type alias CompanyInputModel = {
   name: String
   , lat: String
   , lon: String
   , postcode: String
+  , companyAddShow: Bool
 }
 
-initCompanyInputModel = CompanyInputModel "" "0" "0" ""
+initCompanyInputModel = CompanyInputModel "" "0" "0" "" False
 
 
 type alias TechAddInputModel = {

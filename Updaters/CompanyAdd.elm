@@ -12,11 +12,12 @@ companyAddUpdate input model =
       model.companyInput
     updatedModel =
       case input of
-        Name s     -> { companyAddModel | name = s }
-        Lat s      -> { companyAddModel | lat = s }
-        Lon s      -> { companyAddModel | lon = s }
-        Postcode s -> { companyAddModel | postcode = s }
-        _          -> companyAddModel
+        Name s           -> { companyAddModel | name = s }
+        Lat s            -> { companyAddModel | lat = s }
+        Lon s            -> { companyAddModel | lon = s }
+        Postcode s       -> { companyAddModel | postcode = s }
+        CompanyAddShow b -> { companyAddModel | companyAddShow = b }
+        _                -> companyAddModel
     command =
       case input of
         CompanyAddPress -> addCompany model.session companyAddModel
@@ -26,8 +27,13 @@ companyAddUpdate input model =
 
 companyAddResponseUpdate : ResponseHttp Int -> Model -> (Model, Cmd Msg)
 companyAddResponseUpdate input model =
-  let companyListInput =
-    model.companyListInput
+  let
+    companyListInput =
+      model.companyListInput
+    companyAdd =
+      model.companyInput
+    updatedCompanyAdd =
+      { companyAdd | companyAddShow = False }
   in
     case input of
       Error e         -> (model, Cmd.none)
@@ -36,4 +42,4 @@ companyAddResponseUpdate input model =
           updated =
             {companyListInput | id = toString r}
         in
-          ({model | companyListInput = updated}, fetchCompanies)
+          ({model | companyListInput = updated, companyInput = updatedCompanyAdd }, fetchCompanies)

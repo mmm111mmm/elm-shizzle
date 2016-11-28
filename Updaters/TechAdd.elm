@@ -15,18 +15,13 @@ techAddUpdate msg model =
       model.techAddInput
     updatedModel =
       case msg of
-        TechName s      -> { techAddModel | name = s }
+        TechName s        -> { techAddModel | name = s }
         TechAddToggle num -> { techAddModel | techAddBox = num }
-        TechEnter k id  -> if k == 27 then
-                             { techAddModel | techAddBox = "" }
-                           else
-                             techAddModel
+        TechEnter 27 _    -> { techAddModel | techAddBox = "" }
+        _                 ->  techAddModel
     command =
       case msg of
-        TechEnter k id  -> if k == 13 then
-                             addTech model.session id techAddModel
-                           else
-                             Cmd.none
+        TechEnter 13 id -> addTech model.session id techAddModel
         TechAddToggle n -> if String.length n > 0 then Leaflet.focusOnInput "" else Cmd.none
         _ -> Cmd.none
   in
