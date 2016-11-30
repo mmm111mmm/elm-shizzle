@@ -2,6 +2,8 @@ module Requests exposing (..)
 
 import Task
 import Model.Model exposing (..)
+import CompanyInput.CompanyInputModel exposing (..)
+import LoginInput.LoginInputModel exposing (..)
 import Http exposing (..)
 import Json.Decode as Json exposing (..)
 import Model.Company exposing (..)

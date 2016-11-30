@@ -1,7 +1,7 @@
 module Updaters.CompanyAdd exposing (..)
 
-import Model.Model exposing (Model, CompanyInputModel)
-import Messages exposing (Msg, CompanyInputData(..))
+import Model.Model exposing (..)
+import Messages exposing (..)
 import Requests exposing (addCompany, fetchCompanies)
 import Utils exposing (..)
 
@@ -36,4 +36,4 @@ companyAddResponseUpdate input model =
     case input of
       Error e         -> (model, Cmd.none)
       ValueResponse r ->
-        ({model | companyInput = updatedCompanyAdd }, Cmd.none)
+        ( { model | companyInput = updatedCompanyAdd }, fetchCompanies )

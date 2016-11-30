@@ -11,9 +11,6 @@ companyDelUpdate id model =
 
 companyDelResponseUpdate : RawHttp -> Model -> (Model, Cmd Msg)
 companyDelResponseUpdate input m =
-  let companyListInput =
-    m.companyListInput
-  in
-    case input of
-      RawError e    -> (m, Cmd.none)
-      RawResponse r -> httpResponse r (\_ -> (m, fetchCompanies) ) (\_ -> (m, Cmd.none) )
+  case input of
+    RawError e    -> (m, Cmd.none)
+    RawResponse r -> httpResponse r (\_ -> (m, fetchCompanies) ) (\_ -> (m, Cmd.none) )

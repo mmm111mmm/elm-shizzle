@@ -9,8 +9,9 @@ import Leaflet
 companyListUpdate : CompanyListInputData -> Model -> (Model, Cmd Msg)
 companyListUpdate input model =
   let
+    companySelectUpdate = model.companySelect
     sids = List.sortWith (\c d -> if c.id > d.id then GT else LT ) model.companies
-    ids  = List.filter (\c -> c.id > companyListInput.id ) sids
+    ids  = List.filter (\c -> c.id > companySelectUpdate.id ) sids
     head = List.head ids
     next =
       case head of
@@ -18,26 +19,25 @@ companyListUpdate input model =
         Nothing -> case List.head sids of
           Just v  -> v.id
           Nothing -> ""
-    companyListInput = model.companyListInput
     command          = case input of
         CompanySelect companyId -> Cmd.none
         CompanyNext             -> Leaflet.highlightMarker next
     update           = case input of
-        CompanySelect companyId -> { companyListInput | id = companyId }
-        CompanyNext             -> { companyListInput | id = next }
+        CompanySelect companyId -> { companySelectUpdate | id = companyId }
+        CompanyNext             -> { companySelectUpdate | id = next }
   in
-    ({ model | companyListInput = update }, command)
+    ({ model | companySelect = update }, command)
 
 
 companiesUpdate : ResponseHttp (List Company) -> Model -> (Model, Cmd Msg)
 companiesUpdate input model =
   let
-    companyListInput =
-      model.companyListInput
+    updated =
+      model.companySelect
   in
     case input of
       Error e         -> ( model, Cmd.none )
-      ValueResponse c -> ( { model | companies = c }, createLeafletPinCommands c companyListInput.id )
+      ValueResponse c -> ( { model | companies = c }, createLeafletPinCommands c updated.id )
 
 createLeafletPinCommands : List Company -> String -> Cmd msg
 createLeafletPinCommands companies selected =

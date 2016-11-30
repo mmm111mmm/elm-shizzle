@@ -3,6 +3,9 @@ module Model.Model exposing (..)
 import Json.Decode as Json exposing (..)
 import Html exposing (..)
 import Model.Company exposing (..)
+import LoginInput.LoginInputModel exposing (..)
+import CompanyInput.CompanyInputModel exposing (..)
+import CompanySelect.CompanySelectModel exposing (..)
 
 type alias Model = {
   page:           String
@@ -10,38 +13,13 @@ type alias Model = {
   , loginInput:   LoginInputModel
   , companyInput: CompanyInputModel
   , techAddInput: TechAddInputModel
-  , companyListInput: CompanyListInputModel
+  , companySelect: CompanySelectModel
   , companies:    List Company
 }
 
-initModel = Model "home" "" initLoginInputModel initCompanyInputModel initTechAddInput initCompanyListInputModel []
+initModel = Model "home" "" initLoginInputModel initCompanyInputModel initTechAddInput initCompanySelectModel []
 
 -- input
-
-type alias CompanyListInputModel = {
-  id : String
-}
-
-initCompanyListInputModel = CompanyListInputModel ""
-
-type alias LoginInputModel = {
-  username : String
-  , password : String
-  , loginPressInvalid: Bool
-  , loginShow: Bool
-}
-
-initLoginInputModel = LoginInputModel "" "" False False
-
-type alias CompanyInputModel = {
-  name: String
-  , lat: String
-  , lon: String
-  , postcode: String
-  , companyAddShow: Bool
-}
-
-initCompanyInputModel = CompanyInputModel "" "0" "0" "" False
 
 
 type alias TechAddInputModel = {

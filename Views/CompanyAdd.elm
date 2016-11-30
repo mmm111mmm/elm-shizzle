@@ -3,8 +3,8 @@ module Views.CompanyAdd exposing (renderCompanyAdd)
 import Html exposing (..)
 import Html.Events exposing (onClick, onInput)
 import Html.Attributes exposing (..)
-import Model.Model exposing (Model, LoginInputModel)
-import Messages exposing (Msg(CompanyAdd), CompanyInputData(..))
+import Model.Model exposing (..)
+import Messages exposing (..)
 
 renderCompanyAdd : Model -> Html Msg
 renderCompanyAdd model =

@@ -16,75 +16,45 @@ import Views.Login exposing (renderLogin)
 import Views.Company exposing (..)
 import Views.CompanyAdd exposing (..)
 
-import Updaters.Login exposing (..)
-import Updaters.CompanyAdd exposing (companyAddUpdate, companyAddResponseUpdate)
+import Updaters.Misc exposing (..)
+import Updaters.CompanyAdd exposing (..)
 import Updaters.CompanyDel exposing (companyDelUpdate, companyDelResponseUpdate)
 import Updaters.TechAdd exposing (techAddUpdate, techAddResponseUpdate)
 import Updaters.TechDel exposing (techDelUpdate, techDelResponseUpdate)
 import Updaters.CompanyList exposing (companiesUpdate, companyListUpdate)
+import LoginInput.LoginInputUpdaters exposing (..)
+import CompanyInput.CompanyInputUpdaters exposing (..)
+import CompanySelect.CompanySelectUpdaters exposing (..)
 
-updateInputResponse : Msg -> Model -> ( Model, Cmd Msg )
-updateInputResponse mssg model =
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
   let
-     _ = Debug.log "msg!" mssg
-     m = { model | loginInput = loginUserInputUpdate1 mssg model.loginInput }
-  in
-    case mssg of
-      Login msg                 -> ( loginUserInputUpdate msg model
-                                     |> loginCloseThenCloseCompanyAdd msg,
-                                     loginInputCommand msg model)
-      LoginResponse msg         -> loginResponseUpdate msg model
-
-      CompanyAdd msg            -> companyAddUpdate msg model
-      CompanyAddResponse msg    -> companyAddResponseUpdate msg model
-
-      CompanyDel msg            -> companyDelUpdate msg model
-      CompanyDelResponse msg    -> companyDelResponseUpdate msg model
-
-      TechAdd msg               -> techAddUpdate msg model
-      TechAddResponse msg       -> techAddResponseUpdate msg model
-
-      TechDel msg               -> techDelUpdate msg model
-      TechDelResponse msg       -> techDelResponseUpdate msg model
-
-      CompanyList msg           -> companyListUpdate msg model
-      CompanyListResponse msg   -> companiesUpdate msg model
-
-updateUi : Msg -> (Model, Cmd Msg) -> (Model, Cmd Msg)
-updateUi msg modelAndCmd =
-  let
-    model = fst modelAndCmd
-    login = model.loginInput
-    companyListInput = model.companyListInput
-    companyAdd = model.companyInput
+     _ = Debug.log "msg!" msg
+     m = { model |
+          loginInput = loginModelUpdaters msg model
+          , companyInput = companyInputModelUpdaters msg model
+          , companySelect = companySelectUpdaters msg model
+         }
   in
     case msg of
-      CompanyAdd (CompanyAddShow True)     ->
-        let
-          updatedLogin =
-            if model.session == "" then
-              { login | loginShow = True }
-            else
-              { login | loginShow = False }
-          companyListInput =
-            model.companyListInput
-        in
-          ( { model | loginInput = updatedLogin }, snd modelAndCmd )
-      CompanyAddResponse (ValueResponse r) ->
-        let
-          companyListInput =
-            model.companyListInput
-          updated =
-            {companyListInput | id = toString r}
-        in
-          ({ model | companyListInput = updated }, fetchCompanies)
-      CompanyDelResponse (RawResponse r)   ->
-        let
-          updatedCompanyListInput =
-            { companyListInput | id = "" }
-        in
-          ( {model | companyListInput = updatedCompanyListInput}, snd modelAndCmd )
-      _                                    -> modelAndCmd
+      Login m1                 -> ( m,
+                                     loginInputCommand m1 m)
+      LoginResponse m1         -> loginResponseUpdate m1 m
+
+      CompanyAdd m1            -> companyAddUpdate m1 m
+      CompanyAddResponse m1    -> companyAddResponseUpdate m1 m
+
+      CompanyDel m1            -> companyDelUpdate m1 m
+      CompanyDelResponse m1    -> companyDelResponseUpdate m1 m
+
+      TechAdd m1               -> techAddUpdate m1 model
+      TechAddResponse m1       -> techAddResponseUpdate m1 m
+
+      TechDel m1               -> techDelUpdate m1 m
+      TechDelResponse m1       -> techDelResponseUpdate m1 m
+
+      CompanyList m1           -> companyListUpdate m1 m
+      CompanyListResponse m1   -> companiesUpdate m1 m
 
 --
 
@@ -92,7 +62,7 @@ view : Model -> Html Msg
 view model =
   let
     -- _ = Debug.log "model" model
-    companyIn   = model.companyListInput
+    companyIn   = model.companySelect
     loginIn     = model.loginInput
     selected    = companyIn.id
     company     = List.filter (\c -> c.id == selected) model.companies |> List.head
@@ -136,7 +106,6 @@ main =
   Html.App.program
     { init = init
     , view = view
-    , update = \msg model ->
-      updateInputResponse msg model |> updateUi msg
+    , update = update
     , subscriptions = subscriptions
     }
