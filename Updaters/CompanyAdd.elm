@@ -28,8 +28,6 @@ companyAddUpdate input model =
 companyAddResponseUpdate : ResponseHttp Int -> Model -> (Model, Cmd Msg)
 companyAddResponseUpdate input model =
   let
-    companyListInput =
-      model.companyListInput
     companyAdd =
       model.companyInput
     updatedCompanyAdd =
@@ -38,8 +36,4 @@ companyAddResponseUpdate input model =
     case input of
       Error e         -> (model, Cmd.none)
       ValueResponse r ->
-        let
-          updated =
-            {companyListInput | id = toString r}
-        in
-          ({model | companyListInput = updated, companyInput = updatedCompanyAdd }, fetchCompanies)
+        ({model | companyInput = updatedCompanyAdd }, Cmd.none)

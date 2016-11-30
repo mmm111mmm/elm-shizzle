@@ -16,7 +16,7 @@ import Views.Login exposing (renderLogin)
 import Views.Company exposing (..)
 import Views.CompanyAdd exposing (..)
 
-import Updaters.Login exposing (loginUpdate, loginResponseUpdate)
+import Updaters.Login exposing (..)
 import Updaters.CompanyAdd exposing (companyAddUpdate, companyAddResponseUpdate)
 import Updaters.CompanyDel exposing (companyDelUpdate, companyDelResponseUpdate)
 import Updaters.TechAdd exposing (techAddUpdate, techAddResponseUpdate)
@@ -24,12 +24,15 @@ import Updaters.TechDel exposing (techDelUpdate, techDelResponseUpdate)
 import Updaters.CompanyList exposing (companiesUpdate, companyListUpdate)
 
 updateInputResponse : Msg -> Model -> ( Model, Cmd Msg )
-updateInputResponse msg model =
+updateInputResponse mssg model =
   let
-     _ = Debug.log "msg!" msg
+     _ = Debug.log "msg!" mssg
+     m = { model | loginInput = loginUserInputUpdate1 mssg model.loginInput }
   in
-    case msg of
-      Login msg                 -> loginUpdate msg model
+    case mssg of
+      Login msg                 -> ( loginUserInputUpdate msg model
+                                     |> loginCloseThenCloseCompanyAdd msg,
+                                     loginInputCommand msg model)
       LoginResponse msg         -> loginResponseUpdate msg model
 
       CompanyAdd msg            -> companyAddUpdate msg model
@@ -57,18 +60,24 @@ updateUi msg modelAndCmd =
   in
     case msg of
       CompanyAdd (CompanyAddShow True)     ->
-        let updatedLogin =
-          if model.session == "" then
-            { login | loginShow = True }
-          else
-            { login | loginShow = False }
+        let
+          updatedLogin =
+            if model.session == "" then
+              { login | loginShow = True }
+            else
+              { login | loginShow = False }
+          companyListInput =
+            model.companyListInput
         in
-        ( { model | loginInput = updatedLogin }, snd modelAndCmd )
-      Login (LoginShow False)              ->
-        let updatedComapanyAdd =
-          { companyAdd | companyAddShow = False }
+          ( { model | loginInput = updatedLogin }, snd modelAndCmd )
+      CompanyAddResponse (ValueResponse r) ->
+        let
+          companyListInput =
+            model.companyListInput
+          updated =
+            {companyListInput | id = toString r}
         in
-          ( { model | companyInput = updatedComapanyAdd }, snd modelAndCmd )
+          ({ model | companyListInput = updated }, fetchCompanies)
       CompanyDelResponse (RawResponse r)   ->
         let
           updatedCompanyListInput =
