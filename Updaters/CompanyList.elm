@@ -2,6 +2,7 @@ module Updaters.CompanyList exposing (..)
 
 import Model.Model exposing (..)
 import Model.Company exposing (..)
+import CompaniesList.CompaniesListModel exposing (..)
 import Messages exposing (..)
 import Utils exposing (ResponseHttp(..))
 import Leaflet
@@ -10,24 +11,14 @@ companyListUpdate : CompanyListInputData -> Model -> (Model, Cmd Msg)
 companyListUpdate input model =
   let
     companySelectUpdate = model.companySelect
-    sids = List.sortWith (\c d -> if c.id > d.id then GT else LT ) model.companies
-    ids  = List.filter (\c -> c.id > companySelectUpdate.id ) sids
-    head = List.head ids
-    next =
-      case head of
-        Just v  -> v.id
-        Nothing -> case List.head sids of
-          Just v  -> v.id
-          Nothing -> ""
-    command          = case input of
+    currentId = companySelectUpdate.id
+    next      = findNextCompanyToShow currentId model.companies
+    command =
+      case input of
         CompanySelect companyId -> Cmd.none
         CompanyNext             -> Leaflet.highlightMarker next
-    update           = case input of
-        CompanySelect companyId -> { companySelectUpdate | id = companyId }
-        CompanyNext             -> { companySelectUpdate | id = next }
   in
-    ({ model | companySelect = update }, command)
-
+    (model, command)
 
 companiesUpdate : ResponseHttp (List Company) -> Model -> (Model, Cmd Msg)
 companiesUpdate input model =
@@ -37,11 +28,20 @@ companiesUpdate input model =
   in
     case input of
       Error e         -> ( model, Cmd.none )
-      ValueResponse c -> ( { model | companies = c }, createLeafletPinCommands c updated.id )
+      ValueResponse c -> ( model, createLeafletPinCommands c updated.id )
 
 createLeafletPinCommands : List Company -> String -> Cmd msg
 createLeafletPinCommands companies selected =
-  let pins =
-    Leaflet.addLeafletPins (companies, selected)
+  Leaflet.addLeafletPins (companies, selected)
+
+findNextCompanyToShow currentId companies =
+  let
+    sids = List.sortWith (\c d -> if c.id > d.id then GT else LT ) companies
+    ids  = List.filter (\c -> c.id > currentId ) sids
+    head = List.head ids
   in
-    pins
+    case head of
+      Just v  -> v.id
+      Nothing -> case List.head sids of
+        Just v  -> v.id
+        Nothing -> ""

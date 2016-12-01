@@ -6,6 +6,7 @@ import Model.Company exposing (..)
 import LoginInput.LoginInputModel exposing (..)
 import CompanyInput.CompanyInputModel exposing (..)
 import CompanySelect.CompanySelectModel exposing (..)
+import CompaniesList.CompaniesListModel exposing (..)
 
 type alias Model = {
   page:           String

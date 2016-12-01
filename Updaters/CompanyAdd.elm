@@ -5,35 +5,14 @@ import Messages exposing (..)
 import Requests exposing (addCompany, fetchCompanies)
 import Utils exposing (..)
 
-companyAddUpdate : CompanyInputData -> Model -> (Model, Cmd Msg)
-companyAddUpdate input model =
-  let
-    companyAddModel =
-      model.companyInput
-    updatedModel =
-      case input of
-        Name s           -> { companyAddModel | name = s }
-        Lat s            -> { companyAddModel | lat = s }
-        Lon s            -> { companyAddModel | lon = s }
-        Postcode s       -> { companyAddModel | postcode = s }
-        CompanyAddShow b -> { companyAddModel | companyAddShow = b }
-        _                -> companyAddModel
-    command =
-      case input of
-        CompanyAddPress -> addCompany model.session companyAddModel
-        _               -> Cmd.none
-  in
-    ( { model | companyInput = updatedModel }, command )
+companyAddCommand : CompanyInputData -> Model -> (Model, Cmd Msg)
+companyAddCommand input model =
+  case input of
+    CompanyAddPress -> (model, addCompany model.session model.companyInput)
+    _               -> (model, Cmd.none)
 
 companyAddResponseUpdate : ResponseHttp Int -> Model -> (Model, Cmd Msg)
 companyAddResponseUpdate input model =
-  let
-    companyAdd =
-      model.companyInput
-    updatedCompanyAdd =
-      { companyAdd | companyAddShow = False }
-  in
-    case input of
-      Error e         -> (model, Cmd.none)
-      ValueResponse r ->
-        ( { model | companyInput = updatedCompanyAdd }, fetchCompanies )
+  case input of
+    Error e         -> (model, Cmd.none)
+    ValueResponse r -> (model, fetchCompanies)

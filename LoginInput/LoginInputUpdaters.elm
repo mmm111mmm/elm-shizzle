@@ -28,10 +28,5 @@ loginSuccessCloseBox msg loginModel =
 loginOpenIfCompanyAddWithNoSession : Msg -> String -> LoginInputModel -> LoginInputModel
 loginOpenIfCompanyAddWithNoSession msg session loginModel =
   case msg of
-    CompanyAdd (CompanyAddShow True) ->
-      if session == "" then
-        { loginModel | loginShow = True }
-      else
-        { loginModel | loginShow = False }
-    _                                 ->
-      loginModel
+    CompanyAdd (CompanyAddShow True) -> { loginModel | loginShow = (session == "") }
+    _                                 -> loginModel

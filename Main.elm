@@ -25,23 +25,24 @@ import Updaters.CompanyList exposing (companiesUpdate, companyListUpdate)
 import LoginInput.LoginInputUpdaters exposing (..)
 import CompanyInput.CompanyInputUpdaters exposing (..)
 import CompanySelect.CompanySelectUpdaters exposing (..)
+import CompaniesList.CompaniesListUpdaters exposing (..)
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
   let
      _ = Debug.log "msg!" msg
      m = { model |
-          loginInput = loginModelUpdaters msg model
-          , companyInput = companyInputModelUpdaters msg model
+          loginInput      = loginModelUpdaters msg model
+          , companyInput  = companyInputModelUpdaters msg model
           , companySelect = companySelectUpdaters msg model
+          , companies     = companiesListUpdaters msg model
          }
   in
     case msg of
-      Login m1                 -> ( m,
-                                     loginInputCommand m1 m)
+      Login m1                 -> ( m, loginInputCommand m1 m)
       LoginResponse m1         -> loginResponseUpdate m1 m
 
-      CompanyAdd m1            -> companyAddUpdate m1 m
+      CompanyAdd m1            -> companyAddCommand m1 m
       CompanyAddResponse m1    -> companyAddResponseUpdate m1 m
 
       CompanyDel m1            -> companyDelUpdate m1 m

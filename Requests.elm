@@ -9,6 +9,7 @@ import Json.Decode as Json exposing (..)
 import Model.Company exposing (..)
 import Messages exposing (..)
 import Utils exposing (..)
+import CompaniesList.CompaniesListModel exposing (..)
 
 companyList: (Http.Error -> a) -> (List Company -> a) -> Cmd a
 companyList errorType successType =
