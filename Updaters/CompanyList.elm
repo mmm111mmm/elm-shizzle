@@ -28,11 +28,7 @@ companiesUpdate input model =
   in
     case input of
       Error e         -> ( model, Cmd.none )
-      ValueResponse c -> ( model, createLeafletPinCommands c updated.id )
-
-createLeafletPinCommands : List Company -> String -> Cmd msg
-createLeafletPinCommands companies selected =
-  Leaflet.addLeafletPins (companies, selected)
+      ValueResponse c -> ( model, Leaflet.addLeafletPins (c, updated.id) )
 
 findNextCompanyToShow currentId companies =
   let

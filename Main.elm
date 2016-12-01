@@ -17,15 +17,13 @@ import Views.Company exposing (..)
 import Views.CompanyAdd exposing (..)
 
 import Updaters.Misc exposing (..)
-import Updaters.CompanyAdd exposing (..)
-import Updaters.CompanyDel exposing (companyDelUpdate, companyDelResponseUpdate)
 import Updaters.TechAdd exposing (techAddUpdate, techAddResponseUpdate)
-import Updaters.TechDel exposing (techDelUpdate, techDelResponseUpdate)
 import Updaters.CompanyList exposing (companiesUpdate, companyListUpdate)
 import LoginInput.LoginInputUpdaters exposing (..)
 import CompanyInput.CompanyInputUpdaters exposing (..)
 import CompanySelect.CompanySelectUpdaters exposing (..)
 import CompaniesList.CompaniesListUpdaters exposing (..)
+import Session.SessionUpdaters exposing (..)
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -36,26 +34,16 @@ update msg model =
           , companyInput  = companyInputModelUpdaters msg model
           , companySelect = companySelectUpdaters msg model
           , companies     = companiesListUpdaters msg model
+          , session       = sessionUpdaters msg model
          }
   in
-    case msg of
-      Login m1                 -> ( m, loginInputCommand m1 m)
-      LoginResponse m1         -> loginResponseUpdate m1 m
-
-      CompanyAdd m1            -> companyAddCommand m1 m
-      CompanyAddResponse m1    -> companyAddResponseUpdate m1 m
-
-      CompanyDel m1            -> companyDelUpdate m1 m
-      CompanyDelResponse m1    -> companyDelResponseUpdate m1 m
-
-      TechAdd m1               -> techAddUpdate m1 model
-      TechAddResponse m1       -> techAddResponseUpdate m1 m
-
-      TechDel m1               -> techDelUpdate m1 m
-      TechDelResponse m1       -> techDelResponseUpdate m1 m
-
-      CompanyList m1           -> companyListUpdate m1 m
-      CompanyListResponse m1   -> companiesUpdate m1 m
+    (m, loginInputCommand msg m)
+--    case msg of
+--      TechAdd m1               -> techAddUpdate msg m
+--      TechAddResponse m1       -> techAddResponseUpdate msg m
+--
+--      CompanyList m1           -> companyListUpdate msg m
+--      CompanyListResponse m1   -> companiesUpdate msg m
 
 --
 

@@ -5,11 +5,11 @@ import CompaniesList.CompaniesListModel exposing (..)
 import Utils exposing (..)
 
 companiesListUpdaters msg model
-  = companiesListResponse msg
+  = companiesListResponse msg model.companies
 
-companiesListResponse: Msg -> List Company
-companiesListResponse msg =
+companiesListResponse: Msg -> List Company -> List Company
+companiesListResponse msg existing =
   case msg of
-    CompanyListResponse (Error e)          -> []
+    CompanyListResponse (Error e)          -> existing
     CompanyListResponse (ValueResponse cs) -> cs
-    _                                      -> []
+    _                                      -> existing
