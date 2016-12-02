@@ -20,6 +20,7 @@ main =
         let
            updatedModel = updater msg model
            commands     = generateCommands msg updatedModel
+           _            = Debug.log "message" msg 
         in
           ( updatedModel, commands )
     , subscriptions = \_ ->
