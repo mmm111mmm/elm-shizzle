@@ -9,8 +9,8 @@ updater msg model =
     -- session value set after a successful login
     -- session value is never deleted as yet
     session = case msg of
-      LoginResponse (ValueResponse s)      -> s
-      _                                    -> model.session
+      LoginResponse (ValueResponse s)        -> s
+      _                                      -> model.session
     -- closes login after succesful login
     -- open login if we try to add a company without a session
     , loginInput = model.loginInput |> \m -> case msg of

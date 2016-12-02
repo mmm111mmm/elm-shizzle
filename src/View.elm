@@ -11,38 +11,40 @@ import Messages exposing (..)
 import Model exposing (..)
 import Views.Login exposing (..)
 
-view : Model -> Html Msg
-view model =
+view model loginInput companyInput companySelect =
   let
-    -- _ = Debug.log "model" model
-    companyIn   = model.companySelect
-    loginIn     = model.loginInput
-    selected    = companyIn.id
-    company     = List.filter (\c -> c.id == selected) model.companies |> List.head
-    companyAdd  = model.companyInput
-    companyInfo = case company of
+    mainContent = div []
+      [ div [ id "mapid", floatLeft ] []
+        , companyInfoBox companySelect.id model.techAddInput model.companies
+      ]
+  in
+    div []
+        [
+        mainContent
+        , if loginInput.loginShow then
+          div [] [ Utils.popup True (renderLogin model.session loginInput) (LoginShow False |> Login) ]
+        else if companyInput.companyAddShow then
+          div [] [ span [] [], Utils.popup True (renderCompanyAdd model) (CompanyAddShow False |> CompanyAdd) ]
+        else
+          span [] []
+        ]
+
+companyInfoBox selectedId techAddInput companies =
+  let
+    company     = List.filter (\c -> c.id == selectedId) companies |> List.head
+    delCompany id = span [ style [("cursor", "pointer")], onClick (id |> CompanyDel) ] [ text " ×" ]
+  in
+    case company of
       Just c ->
         div [ floatLeft ]
             [ button [ onClick (CompanyNext |> CompanyList) ] [ text "next" ]
               , button [ onClick (CompanyAddShow True |> CompanyAdd) ] [ text "add" ]
               , h5 [] [ text (c.name), delCompany c.id ]
-              , div [] [ renderTech model.techAddInput c.technologies c.id ]
+              , div [] [ renderTech techAddInput c.technologies c.id ]
             ]
       Nothing ->
         div [ floatLeft ] [text "Try selecting a company"]
-    delCompany id = span [ style [("cursor", "pointer")], onClick (id |> CompanyDel) ] [ text " ×" ]
-    companies   = div [] [ div [ id "mapid", floatLeft ] [], companyInfo]
-  in
-    div []
-        [
-        div [ style [] ] [ companies ]
-        , if loginIn.loginShow then
-          div [] [ Utils.popup True (renderLogin model.session loginIn) (LoginShow False |> Login) ]
-        else if companyAdd.companyAddShow then
-          div [] [ span [] [], Utils.popup True (renderCompanyAdd model) (CompanyAddShow False |> CompanyAdd) ]
-        else
-          span [] []
-        ]
+
 
 renderCompanyAdd : Model -> Html Msg
 renderCompanyAdd model =
