@@ -1,15 +1,15 @@
 module Requests exposing (..)
 
 import Task
-import Model.Model exposing (..)
-import CompanyInput.CompanyInputModel exposing (..)
-import LoginInput.LoginInputModel exposing (..)
+import Model exposing (..)
 import Http exposing (..)
 import Json.Decode as Json exposing (..)
-import Model.Company exposing (..)
 import Messages exposing (..)
 import Utils exposing (..)
-import CompaniesList.CompaniesListModel exposing (..)
+import ModelUpdaters.CompanyInputModel exposing (..)
+import ModelUpdaters.LoginInputModel exposing (..)
+import ModelUpdaters.CompaniesListModel exposing (..)
+import ModelUpdaters.TechAddInputModel exposing (..)
 
 companyList: (Http.Error -> a) -> (List Company -> a) -> Cmd a
 companyList errorType successType =

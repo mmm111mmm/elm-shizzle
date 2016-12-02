@@ -6,7 +6,7 @@ import Html.Attributes exposing (id, style)
 import Html.Events exposing (onClick)
 import Utils exposing (..)
 import Messages exposing (..)
-import Model.Model exposing (Model, initModel)
+import Model exposing (Model, initModel)
 import Requests exposing (fetchCompanies)
 import Task
 
@@ -16,34 +16,28 @@ import Views.Login exposing (renderLogin)
 import Views.Company exposing (..)
 import Views.CompanyAdd exposing (..)
 
-import Updaters.Misc exposing (..)
-import Updaters.TechAdd exposing (techAddUpdate, techAddResponseUpdate)
-import Updaters.CompanyList exposing (companiesUpdate, companyListUpdate)
-import LoginInput.LoginInputUpdaters exposing (..)
-import CompanyInput.CompanyInputUpdaters exposing (..)
-import CompanySelect.CompanySelectUpdaters exposing (..)
-import CompaniesList.CompaniesListUpdaters exposing (..)
-import Session.SessionUpdaters exposing (..)
+import Commands exposing (..)
+import ModelUpdaters.LoginInputUpdaters exposing (..)
+import ModelUpdaters.CompanyInputUpdaters exposing (..)
+import ModelUpdaters.CompanySelectUpdaters exposing (..)
+import ModelUpdaters.CompaniesListUpdaters exposing (..)
+import ModelUpdaters.SessionUpdaters exposing (..)
+import ModelUpdaters.TechAddInputUpdaters exposing (..)
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
   let
      _ = Debug.log "msg!" msg
      m = { model |
-          loginInput      = loginModelUpdaters msg model
+          session       = sessionUpdaters msg model
+          , loginInput      = loginModelUpdaters msg model
           , companyInput  = companyInputModelUpdaters msg model
           , companySelect = companySelectUpdaters msg model
           , companies     = companiesListUpdaters msg model
-          , session       = sessionUpdaters msg model
+          , techAddInput = techAddInputUpdaters msg model
          }
   in
-    (m, loginInputCommand msg m)
---    case msg of
---      TechAdd m1               -> techAddUpdate msg m
---      TechAddResponse m1       -> techAddResponseUpdate msg m
---
---      CompanyList m1           -> companyListUpdate msg m
---      CompanyListResponse m1   -> companiesUpdate msg m
+    (m, generateCommands msg m)
 
 --
 
