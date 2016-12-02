@@ -1,4 +1,4 @@
-module Views.Login exposing (renderLogin)
+module ViewLogin exposing (renderLogin)
 
 import Html exposing (..)
 import Html.Events exposing (onClick, onInput)

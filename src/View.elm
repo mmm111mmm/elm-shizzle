@@ -9,25 +9,25 @@ import Json.Decode as Json
 import Utils exposing (..)
 import Messages exposing (..)
 import Model exposing (..)
-import Views.Login exposing (..)
+import ViewLogin exposing (..)
 
 view model loginInput companyInput companySelect =
   let
-    mainContent = div []
-      [ div [ id "mapid", floatLeft ] []
+    mainContent =
+      div [] [
+        div [ id "mapid", floatLeft ] []
         , companyInfoBox companySelect.id model.techAddInput model.companies
       ]
   in
-    div []
-        [
-        mainContent
-        , if loginInput.loginShow then
-          div [] [ Utils.popup True (renderLogin model.session loginInput) (LoginShow False |> Login) ]
-        else if companyInput.companyAddShow then
-          div [] [ span [] [], Utils.popup True (renderCompanyAdd model) (CompanyAddShow False |> CompanyAdd) ]
-        else
-          span [] []
-        ]
+    div [] [
+      mainContent
+      , if loginInput.loginShow then
+        div [] [ Utils.popup True (renderLogin model.session loginInput) (LoginShow False |> Login) ]
+      else if companyInput.companyAddShow then
+        div [] [ span [] [], Utils.popup True (renderCompanyAdd model) (CompanyAddShow False |> CompanyAdd) ]
+      else
+        span [] []
+      ]
 
 companyInfoBox selectedId techAddInput companies =
   let
