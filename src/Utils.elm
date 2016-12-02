@@ -4,12 +4,15 @@ import Http
 import Html.Attributes exposing (style)
 import Html exposing (..)
 import Html.Events exposing (..)
+import String
 
 findNextCompanyToShow currentId companies =
   let
-    sids = List.sortWith (\c d -> if c.id > d.id then GT else LT ) companies
-    ids  = List.filter (\c -> c.id > currentId ) sids
+    idAsInt s = String.toInt s |> Result.withDefault -1
+    sids = List.sortWith (\c d -> if idAsInt c.id > idAsInt d.id then GT else LT ) companies
+    ids  = List.filter (\c -> idAsInt c.id > idAsInt currentId ) sids
     head = List.head ids
+    _ = Debug.log "I've been called" True
   in
     case head of
       Just v  -> v.id

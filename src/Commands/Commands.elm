@@ -24,7 +24,7 @@ generateCommands input model =
       TechDelResponse (RawResponse r)       -> httpResponse1 r (\_ -> fetchCompanies ) (\_ -> Cmd.none )
       CompanyListResponse (Error e)         -> Cmd.none
       CompanyListResponse (ValueResponse c) -> Leaflet.addLeafletPins (c, selectModel.id)
-      CompanyList (CompanyNext)             -> Leaflet.highlightMarker <| findNextCompanyToShow selectModel.id model.companies
+      CompanyList (CompanyNext)             -> Leaflet.highlightMarker <| selectModel.id
       TechAdd (TechEnter 13 id)             -> addTech model.session id model.techAddInput
       TechAdd (TechAddToggle n)             -> if String.length n > 0 then Leaflet.focusOnInput "" else Cmd.none
       TechAddResponse (RawError e)          -> Cmd.none
