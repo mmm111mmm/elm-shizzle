@@ -4,8 +4,6 @@ import Html exposing (Html, div, text, span, input, p, form, code, span)
 import Html.Events exposing (on, keyCode, onClick, onInput, onBlur)
 import Html.Attributes exposing (placeholder, style, type', name)
 import Model exposing (..)
-import ModelUpdaters.TechAddInputModel exposing (..)
-import ModelUpdaters.CompaniesListModel exposing (..)
 import Messages exposing (Msg(CompanyDel, TechAdd, TechDel), TechInputData(..))
 import Json.Decode as Json
 

@@ -5,7 +5,6 @@ import Html.Events exposing (onClick, onInput)
 import Html.Attributes exposing (..)
 import Model exposing (..)
 import Messages exposing (..)
-import ModelUpdaters.LoginInputModel exposing (..)
 import String exposing (trim, length)
 import Utils exposing (..)
 

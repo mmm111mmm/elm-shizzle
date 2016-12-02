@@ -1,6 +1,6 @@
 module Messages exposing (..)
 
-import ModelUpdaters.CompaniesListModel exposing (..)
+import Model exposing (..)
 import Utils exposing (ResponseHttp, RawHttp)
 
 type LoginInputData =

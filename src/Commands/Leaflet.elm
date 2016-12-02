@@ -1,6 +1,6 @@
-port module Leaflet exposing (..)
+port module Commands.Leaflet exposing (..)
 
-import ModelUpdaters.CompaniesListModel exposing (..)
+import Model exposing (..)
 
 port setupLeaflet : Bool -> Cmd msg
 port addLeafletPins : (List Company, String)-> Cmd msg

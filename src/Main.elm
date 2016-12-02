@@ -4,42 +4,34 @@ import Html.App
 import Html exposing (..)
 import Html.Attributes exposing (id, style)
 import Html.Events exposing (onClick)
-import Utils exposing (..)
-import Messages exposing (..)
-import Model exposing (Model, initModel)
-import Requests exposing (fetchCompanies)
 import Task
-
-import Leaflet exposing (..)
 
 import Views.Login exposing (renderLogin)
 import Views.Company exposing (..)
 import Views.CompanyAdd exposing (..)
 
-import Commands exposing (..)
-import ModelUpdaters.LoginInputUpdaters exposing (..)
-import ModelUpdaters.CompanyInputUpdaters exposing (..)
-import ModelUpdaters.CompanySelectUpdaters exposing (..)
-import ModelUpdaters.CompaniesListUpdaters exposing (..)
-import ModelUpdaters.SessionUpdaters exposing (..)
-import ModelUpdaters.TechAddInputUpdaters exposing (..)
+import Commands.Leaflet as Leaflet
+import Commands.Commands exposing (..)
+import Commands.Requests exposing (fetchCompanies)
+import ModelUpdaters exposing (..)
+import Utils exposing (..)
+import Messages exposing (..)
+import Model exposing (Model, initModel)
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
   let
-     _ = Debug.log "msg!" msg
+     _ = Debug.log "msg" msg
      m = { model |
-          session       = sessionUpdaters msg model
-          , loginInput      = loginModelUpdaters msg model
-          , companyInput  = companyInputModelUpdaters msg model
-          , companySelect = companySelectUpdaters msg model
+          session         = sessionUpdaters msg model
+          , loginInput    = loginModelUpdaters msg model model.loginInput
+          , companyInput  = companyInputModelUpdaters msg model model.companyInput
+          , companySelect = companySelectUpdaters msg model model.companySelect
           , companies     = companiesListUpdaters msg model
-          , techAddInput = techAddInputUpdaters msg model
+          , techAddInput  = techAddInputUpdaters msg model model.techAddInput
          }
   in
     (m, generateCommands msg m)
-
---
 
 view : Model -> Html Msg
 view model =
@@ -82,7 +74,7 @@ init =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  companyClick (CompanySelect >> CompanyList)
+  Leaflet.companyClick (CompanySelect >> CompanyList)
 
 main : Program Never
 main =
