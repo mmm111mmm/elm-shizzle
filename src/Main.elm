@@ -12,8 +12,8 @@ import Views.CompanyAdd exposing (..)
 
 import Commands.Leaflet as Leaflet
 import Commands.Commands exposing (..)
-import Commands.Requests exposing (fetchCompanies)
-import ModelUpdaters exposing (..)
+import Commands.Requests exposing (..)
+import ModelUpdater exposing (..)
 import Utils exposing (..)
 import Messages exposing (..)
 import Model exposing (Model, initModel)
@@ -21,17 +21,11 @@ import Model exposing (Model, initModel)
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
   let
-     _ = Debug.log "msg" msg
-     m = { model |
-          session         = ModelUpdaters.session msg model
-          , loginInput    = ModelUpdaters.loginInput msg model model.loginInput
-          , companyInput  = ModelUpdaters.companyInput msg model model.companyInput
-          , companySelect = ModelUpdaters.companySelect msg model model.companySelect
-          , companies     = ModelUpdaters.companies msg model
-          , techAddInput  = ModelUpdaters.techAddInput msg model model.techAddInput
-         }
+     _            = Debug.log "msg" msg
+     updatedModel = updater msg model
+     commands     = generateCommands msg updatedModel
   in
-    (m, generateCommands msg m)
+    ( updatedModel, commands )
 
 view : Model -> Html Msg
 view model =

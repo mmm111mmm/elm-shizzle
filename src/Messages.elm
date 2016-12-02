@@ -11,7 +11,6 @@ type LoginInputData =
   | LoginPressInvalid
   | LoginShow Bool
 
-
 type CompanyInputData =
 
   Name String
