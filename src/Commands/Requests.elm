@@ -91,3 +91,20 @@ login d fail succeed=
     Task.perform fail succeed <| Http.fromJson ("session" := Json.string) send
 
 loginFn = \input -> login input (Error >> LoginResponse) (ValueResponse >> LoginResponse)
+
+-- decoders
+
+decodeCompanies : Json.Decoder (List Company)
+decodeCompanies =
+  let comps = Json.list comp
+      comp  = Json.object6 Company
+        ("id" := Json.string)
+        ("name" := Json.string)
+        ("lat" := Json.string)
+        ("lon" := Json.string)
+        ("postcode" := Json.string)
+        tlist
+      tlist = Json.maybe ("technologies" := Json.list titem)
+      titem = Json.object2 Technology ("id" := Json.string) ("name" := Json.string)
+  in
+    "companies" := comps

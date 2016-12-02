@@ -3,9 +3,8 @@ module Commands.Commands exposing (..)
 import Model exposing (..)
 import Messages exposing (..)
 import Commands.Requests exposing (..)
-import Commands.Leaflet as Leaflet 
+import Commands.Leaflet as Leaflet
 import Utils exposing (..)
-import ModelUpdaters exposing (..)
 import String
 
 generateCommands: Msg -> Model -> Cmd Msg

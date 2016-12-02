@@ -5,6 +5,18 @@ import Html.Attributes exposing (style)
 import Html exposing (..)
 import Html.Events exposing (..)
 
+findNextCompanyToShow currentId companies =
+  let
+    sids = List.sortWith (\c d -> if c.id > d.id then GT else LT ) companies
+    ids  = List.filter (\c -> c.id > currentId ) sids
+    head = List.head ids
+  in
+    case head of
+      Just v  -> v.id
+      Nothing -> case List.head sids of
+        Just v  -> v.id
+        Nothing -> ""
+
 httpResponse : Http.Response -> (() -> (model, Cmd msg)) -> (() -> (model, Cmd msg)) -> (model, Cmd msg)
 httpResponse r success failure =
     if r.status < 300 && r.status >= 200 then

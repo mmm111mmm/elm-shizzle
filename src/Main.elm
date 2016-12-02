@@ -23,12 +23,12 @@ update msg model =
   let
      _ = Debug.log "msg" msg
      m = { model |
-          session         = sessionUpdaters msg model
-          , loginInput    = loginModelUpdaters msg model model.loginInput
-          , companyInput  = companyInputModelUpdaters msg model model.companyInput
-          , companySelect = companySelectUpdaters msg model model.companySelect
-          , companies     = companiesListUpdaters msg model
-          , techAddInput  = techAddInputUpdaters msg model model.techAddInput
+          session         = ModelUpdaters.session msg model
+          , loginInput    = ModelUpdaters.loginInput msg model model.loginInput
+          , companyInput  = ModelUpdaters.companyInput msg model model.companyInput
+          , companySelect = ModelUpdaters.companySelect msg model model.companySelect
+          , companies     = ModelUpdaters.companies msg model
+          , techAddInput  = ModelUpdaters.techAddInput msg model model.techAddInput
          }
   in
     (m, generateCommands msg m)

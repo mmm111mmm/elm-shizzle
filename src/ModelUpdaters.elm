@@ -4,12 +4,12 @@ import Messages exposing (..)
 import Model exposing (..)
 import Utils exposing (..)
 
-companiesListUpdaters msg model = case msg of
+companies msg model = case msg of
     CompanyListResponse (Error e)          -> model.companies
     CompanyListResponse (ValueResponse cs) -> cs
     _                                      -> model.companies
 
-companyInputModelUpdaters msg model companyAddModel = case msg of
+companyInput msg model companyAddModel = case msg of
     -- close add company in some cases
     Login (LoginShow False)                -> { companyAddModel | companyAddShow = False }
     CompanyAddResponse (ValueResponse _)   -> { companyAddModel | companyAddShow = False }
@@ -21,7 +21,7 @@ companyInputModelUpdaters msg model companyAddModel = case msg of
     CompanyAdd (CompanyAddShow b)          -> { companyAddModel | companyAddShow = b }
     _                                      -> companyAddModel
 
-companySelectUpdaters msg model selectModel = case msg of
+companySelect msg model selectModel = case msg of
     CompanyAddResponse (ValueResponse r) -> { selectModel | id = toString r }
     -- remove the selection after a del
     CompanyDelResponse (RawResponse r)   -> { selectModel | id = "" }
@@ -30,7 +30,7 @@ companySelectUpdaters msg model selectModel = case msg of
     CompanyList (CompanyNext)            -> { selectModel | id = findNextCompanyToShow selectModel.id model.companies }
     _                                    -> selectModel
 
-loginModelUpdaters msg model loginModel = case msg of
+loginInput msg model loginModel = case msg of
     Login (Username s)               -> { loginModel | username = s }
     Login (Password s)               -> { loginModel | password = s }
     Login (LoginPressInvalid)        -> { loginModel | loginPressInvalid = True }
@@ -41,26 +41,14 @@ loginModelUpdaters msg model loginModel = case msg of
     CompanyAdd (CompanyAddShow True) -> { loginModel | loginShow = (model.session == "") }
     _                                -> loginModel
 
-techAddInputUpdaters msg model techAddModel = case msg of
+techAddInput msg model techAddModel = case msg of
     TechAdd (TechName s)            -> { techAddModel | name = s }
     TechAdd (TechAddToggle num)     -> { techAddModel | techAddBox = num }
     TechAdd (TechEnter 27 _)        -> { techAddModel | techAddBox = "" }
     TechAddResponse (RawResponse r) -> httpResponse1 r (\_ -> { techAddModel | name = "", techAddBox = "" }) (\_ -> techAddModel)
     _                               -> techAddModel
 
-sessionUpdaters msg model = case msg of
+session msg model = case msg of
     LoginResponse (Error e)         -> model.session
     LoginResponse (ValueResponse s) -> s
     _                               -> model.session
-
-findNextCompanyToShow currentId companies =
-  let
-    sids = List.sortWith (\c d -> if c.id > d.id then GT else LT ) companies
-    ids  = List.filter (\c -> c.id > currentId ) sids
-    head = List.head ids
-  in
-    case head of
-      Just v  -> v.id
-      Nothing -> case List.head sids of
-        Just v  -> v.id
-        Nothing -> ""
