@@ -110,13 +110,16 @@
       highlightMarker(cId)
     }
 
-    app.ports.focusOnInput.subscribe(focusOn);
+    app.ports.focusOnHtml.subscribe(focusOn);
 
     function focusOn(focusId) {
       window.requestAnimationFrame(function() {
-        console.log(focusId)
         var t = document.querySelector(focusId)
-        t.focus()
+        if(t) {
+          t.focus()
+        } else {
+          console.debug("couldn't focus on "+ focusId)
+        }
       })
     }
 

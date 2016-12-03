@@ -12,7 +12,6 @@ findNextCompanyToShow currentId companies =
     sids = List.sortWith (\c d -> if idAsInt c.id > idAsInt d.id then GT else LT ) companies
     ids  = List.filter (\c -> idAsInt c.id > idAsInt currentId ) sids
     head = List.head ids
-    _ = Debug.log "I've been called" True
   in
     case head of
       Just v  -> v.id
