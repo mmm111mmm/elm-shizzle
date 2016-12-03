@@ -17,7 +17,7 @@ renderLogin session model =
       , div [id "login"] [
         div []
             [
-              input [ name "username", placeholder "username", type' "text", onInput (Username >> Login) ] []
+              input [ id "loginUsername", name "username", placeholder "username", type' "text", onInput (Username >> Login) ] []
             ]
         , div []
             [

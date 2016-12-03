@@ -3,9 +3,9 @@ module Commands.Commands exposing (..)
 import Model exposing (..)
 import Messages exposing (..)
 import Commands.Requests exposing (..)
-import Commands.Leaflet as Leaflet
+import Commands.Leaflet exposing (..)
 import Utils exposing (..)
-import String
+import String exposing (..)
 
 generateCommands: Msg -> Model -> Cmd Msg
 generateCommands input model =
@@ -14,8 +14,10 @@ generateCommands input model =
   in
     case input of
       Login (LoginPress)                    -> loginFn model.loginInput
+      LoginResponse (ValueResponse v)       -> focusOnHtml "#companyName"
       --
       CompanyAdd (CompanyAddPress)          -> addCompany model.session model.companyInput
+      CompanyAdd (CompanyAddShow True)      -> if blankSession model then focusOnHtml "#loginUsername" else Cmd.none
       CompanyAddResponse (Error e)          -> Cmd.none
       CompanyAddResponse (ValueResponse r)  -> fetchCompanies
       --
@@ -28,11 +30,11 @@ generateCommands input model =
       TechDelResponse (RawResponse r)       -> httpResponse1 r (\_ -> fetchCompanies ) (\_ -> Cmd.none )
       --
       CompanyListResponse (Error e)         -> Cmd.none
-      CompanyListResponse (ValueResponse c) -> Leaflet.addLeafletPins (c, selectModel.id)
-      CompanyList (CompanyNext)             -> Leaflet.highlightMarker <| selectModel.id
+      CompanyListResponse (ValueResponse c) -> addLeafletPins (c, selectModel.id)
+      CompanyList (CompanyNext)             -> highlightMarker <| selectModel.id
       --
       TechAdd (TechEnter 13 id)             -> addTech model.session id model.techAddInput
-      TechAdd (TechAddToggle n)             -> if String.length n > 0 then Leaflet.focusOnInput "" else Cmd.none
+      TechAdd (TechAddToggle n)             -> if length n > 0 then focusOnHtml "#techAdd" else Cmd.none
       TechAddResponse (RawError e)          -> Cmd.none
       TechAddResponse (RawResponse r)       -> httpResponse1 r (\_ -> fetchCompanies) (\_ -> Cmd.none )
       _                                     -> Cmd.none

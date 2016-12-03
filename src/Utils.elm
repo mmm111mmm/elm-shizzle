@@ -20,12 +20,8 @@ findNextCompanyToShow currentId companies =
         Just v  -> v.id
         Nothing -> ""
 
-httpResponse : Http.Response -> (() -> (model, Cmd msg)) -> (() -> (model, Cmd msg)) -> (model, Cmd msg)
-httpResponse r success failure =
-    if r.status < 300 && r.status >= 200 then
-      success ()
-    else
-      failure ()
+blankSession model =
+  model.session == ""
 
 httpResponse1 : Http.Response -> (() -> a) -> (() -> a) -> a
 httpResponse1 r success failure =

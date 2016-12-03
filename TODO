@@ -1,5 +1,6 @@
 * Make delete a company not focus on the next company
-* Auto focus on login and company add
+* Login popup on tech add?
+* Login popup on del company?
 --
 * loading spinner
 * error states

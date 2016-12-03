@@ -114,7 +114,8 @@
 
     function focusOn(focusId) {
       window.requestAnimationFrame(function() {
-        var t = document.querySelector("[name=techAdd]")
+        console.log(focusId)
+        var t = document.querySelector(focusId)
         t.focus()
       })
     }

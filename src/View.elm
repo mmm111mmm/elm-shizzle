@@ -53,7 +53,7 @@ renderCompanyAdd model =
       , div [id "addCompany"] [
         div []
             [
-              input [ name "companyName",  onInput (Name >> CompanyAdd), type' "text", placeholder "name"] []
+              input [ id "companyName",  onInput (Name >> CompanyAdd), type' "text", placeholder "name"] []
             ]
         , div []
             [
@@ -77,7 +77,7 @@ renderTech techAddModel ts companyId =
     techInput techId =
       div [] [
            input [
-             name "techAdd"
+             id "techAdd"
              , style [showInput]
              , placeholder "tech"
              , type' "text"
