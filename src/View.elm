@@ -83,6 +83,7 @@ renderTech techAddModel ts companyId =
              , type' "text"
              , onInput (TechName >> TechAdd)
              , on "keyup" codeToMsg
+             , value techAddModel.name
            ] [ ]
            , span [
                style [showTechAdd, ("padding", "4px"), ("padding", "4px"), ("font-weight", "bold")]

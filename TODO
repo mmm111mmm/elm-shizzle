@@ -1,2 +1,6 @@
-* Think about when a response should change more than its relative input model
 * Make delete a company not focus on the next company
+* Auto focus on login and company add
+--
+* loading spinner
+* error states
+* edit button
