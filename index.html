@@ -105,9 +105,9 @@
         })
       }
       var cId = markers[0].companyId
-      if(shouldSelected!="") cId = shouldSelected
-      app.ports.companyClick.send(cId);
-      highlightMarker(cId)
+      //if(shouldSelected!="") cId = shouldSelected
+      //app.ports.companyClick.send(cId);
+      //highlightMarker(cId)
     }
 
     app.ports.focusOnHtml.subscribe(focusOn);

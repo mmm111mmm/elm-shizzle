@@ -37,7 +37,8 @@ updater msg model =
     -- company selection new/next company id on pressing next
     , companySelect = model.companySelect |> \m -> case msg of
       CompanyAddResponse (ValueResponse r)   -> { m | id = toString r }
-      CompanyDelResponse (RawResponse r)     -> httpResponse1 r (\_ -> { m | id = "" }) (\_ -> m )
+      CompanyDelResponse (RawResponse r)     -> httpResponse1 r (\_ -> { m | id = "-1" }) (\_ -> m )
+      CompanyListResponse (ValueResponse cs) -> if m.id =="" then { m | id = findFirstCompany cs } else m
       CompanyList (CompanySelect id)         -> { m | id = id }
       CompanyList (CompanyNext)              -> { m | id = findNextCompanyToShow m.id model.companies }
       _                                      ->  m

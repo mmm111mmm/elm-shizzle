@@ -19,6 +19,14 @@ findNextCompanyToShow currentId companies =
         Just v  -> v.id
         Nothing -> ""
 
+findFirstCompany companies =
+  let
+    firstCompany = List.head companies
+  in
+    case firstCompany of
+      Just v -> v.id
+      Nothing -> ""
+
 blankSession model =
   model.session == ""
 

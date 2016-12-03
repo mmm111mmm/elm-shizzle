@@ -33,17 +33,18 @@ companyInfoBox selectedId techAddInput companies =
   let
     company     = List.filter (\c -> c.id == selectedId) companies |> List.head
     delCompany id = span [ style [("cursor", "pointer")], onClick (id |> CompanyDel) ] [ text " ×" ]
+    buttonBar = div [] [ button [ onClick (CompanyNext |> CompanyList) ] [ text "next" ]
+                         , button [ onClick (CompanyAddShow True |> CompanyAdd) ] [ text "add" ] ]
   in
     case company of
       Just c ->
         div [ floatLeft ]
-            [ button [ onClick (CompanyNext |> CompanyList) ] [ text "next" ]
-              , button [ onClick (CompanyAddShow True |> CompanyAdd) ] [ text "add" ]
+            [ buttonBar
               , h5 [] [ text (c.name), delCompany c.id ]
               , div [] [ renderTech techAddInput c.technologies c.id ]
             ]
       Nothing ->
-        div [ floatLeft ] [text "Try selecting a company"]
+        div [ floatLeft ] [ buttonBar, text "Try selecting a company" ]
 
 
 renderCompanyAdd : Model -> Html Msg
