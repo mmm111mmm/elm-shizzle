@@ -92,6 +92,12 @@ login d fail succeed=
 
 loginFn = \input -> login input (Error >> LoginResponse) (ValueResponse >> LoginResponse)
 
+loginErrorString error = case error of
+    Timeout      -> "Login timed out"
+    NetworkError -> "Are you connected to the internet?"
+    UnexpectedPayload _ -> "Server error - please try again or pray"
+    BadResponse _ _ -> "The server isn't happy about something"
+
 -- decoders
 
 decodeCompanies : Json.Decoder (List Company)

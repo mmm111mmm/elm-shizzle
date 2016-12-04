@@ -7,12 +7,8 @@ import Commands.Leaflet exposing (..)
 import Utils exposing (..)
 import String exposing (..)
 
-generateCommands: Msg -> Model -> Cmd Msg
-generateCommands input model =
+generateCommands input model companySelect =
   let
-    selectModel = model.companySelect
-    companyInput = model.companyInput
-    techAddInput = model.techAddInput
     command =
       case input of
         Login (LoginPress)                    -> loginFn model.loginInput
@@ -32,8 +28,8 @@ generateCommands input model =
         TechDelResponse (RawResponse r)       -> httpResponse1 r (\_ -> fetchCompanies ) (\_ -> Cmd.none )
         --
         CompanyListResponse (Error e)         -> Cmd.none
-        CompanyListResponse (ValueResponse c) -> addLeafletPins (c, selectModel.id)
-        CompanyList (CompanyNext)             -> highlightMarker <| selectModel.id
+        CompanyListResponse (ValueResponse c) -> addLeafletPins (c, companySelect.id)
+        CompanyList (CompanyNext)             -> highlightMarker <| companySelect.id
         --
         TechAdd (TechEnter 13 id)             -> addTech model.session id model.techAddInput
         TechAdd (TechAddToggle n)             -> Cmd.none
@@ -41,4 +37,4 @@ generateCommands input model =
         TechAddResponse (RawResponse r)       -> httpResponse1 r (\_ -> fetchCompanies) (\_ -> Cmd.none )
         _                                     -> Cmd.none
     in
-      Cmd.batch [command, highlightMarker <| selectModel.id, focusOnHtml "" ]
+      Cmd.batch [ command, highlightMarker <| companySelect.id, focusOnHtml "" ]

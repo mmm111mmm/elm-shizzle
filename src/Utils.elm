@@ -66,7 +66,7 @@ popup shouldShow htmlElement msg =
   if shouldShow then
     div [ style (("background-color", "rgba(0, 0, 0, 0.48)")::("z-index", "1000")::centerFlex) ]
     [
-      div [ style [("padding", "20px"),("background", "white")]] [
+      div [ style [("padding", "20px"),("width", "15%"), ("background", "white")]] [
         div [ floatRight, onClick msg ] [ text "x" ]
         , htmlElement
       ]

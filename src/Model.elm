@@ -40,12 +40,12 @@ initCompanySelectModel = CompanySelectModel ""
 type alias LoginInputModel = {
   username : String
   , password : String
-  , loginPressInvalid: Bool
-  , loginShow: Bool
-  , loading: Bool
+  , loginShow : Bool
+  , loading : Bool
+  , errorResponse : String
 }
 
-initLoginInputModel = LoginInputModel "" "" False False False
+initLoginInputModel = LoginInputModel "" "" False False ""
 
 type alias TechAddInputModel = {
   techAddBox: String

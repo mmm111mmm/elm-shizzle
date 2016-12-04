@@ -19,7 +19,7 @@ main =
     , update = \msg model ->
         let
            updatedModel = updater msg model
-           commands     = generateCommands msg updatedModel
+           commands     = generateCommands msg updatedModel updatedModel.companySelect
            _            = Debug.log "message" msg
         in
           ( updatedModel, commands )

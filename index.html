@@ -127,6 +127,8 @@
 
     function focusOn(focusId) {
       window.requestAnimationFrame(function() {
+        //var activeFocus = document.activeElement
+        //if(activeFocus && activeFocus.tagName.toLowerCase()=="input") return
         var ts = document.querySelectorAll("[class=focus]")
         console.debug("found items to focus on ", ts)
         for(var i = 0; i < ts.length; i++ ) {

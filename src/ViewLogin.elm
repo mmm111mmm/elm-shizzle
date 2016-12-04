@@ -10,7 +10,7 @@ import Utils exposing (..)
 
 renderLogin: String -> LoginInputModel -> Html Msg
 renderLogin session model =
-  div [] [
+  div [ ] [
       div [] [
         h5 [ style [("display", "inline-block")] ] [ text "Please login"]
       ]
@@ -23,17 +23,15 @@ renderLogin session model =
             [
               input [ name "password",  placeholder "password", type' "text", onInput (Password >> Login) ] []
             ]
-        --, div [] [
         , span [] [ buttonWithSpinner (model |> isPressValid) "Login" model.loading ]
-        --]
+        , span [] [ text model.errorResponse ]
       ]
-      , div [ style [ displayNoUserPassMessage model ] ] [ text "Please enter a username and password" ]
       , p [] []
       ]
 
 displayNoUserPassMessage : LoginInputModel -> (String,String)
 displayNoUserPassMessage model =
-  if model.loginPressInvalid && eitherLoginOrPassEmpty model then
+  if not (model.username == "" && model.password == "") && eitherLoginOrPassEmpty model then
     ("display", "block")
   else
     ("display", "none")

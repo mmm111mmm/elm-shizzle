@@ -3,6 +3,7 @@ module ModelUpdater exposing (..)
 import Messages exposing (..)
 import Model exposing (..)
 import Utils exposing (..)
+import Commands.Requests exposing (..)
 
 updater msg model =
   { model |
@@ -16,11 +17,11 @@ updater msg model =
     , loginInput = model.loginInput |> \m -> case msg of
       Login (Username s)                     -> { m | username = s }
       Login (Password s)                     -> { m | password = s }
-      Login (LoginPressInvalid)              -> { m | loginPressInvalid = True }
-      Login (LoginShow b)                    -> { m | loginShow = b }
-      Login (LoginPress)                     -> { m | loading = True }
+      Login (LoginPressInvalid)              -> { m | errorResponse = "Please enter a username or password" }
+      Login (LoginShow b)                    -> { m | loginShow = b, errorResponse = "" }
+      Login (LoginPress)                     -> { m | loading = True, errorResponse = "" }
       LoginResponse (ValueResponse _)        -> { m | loginShow = False, loading = False }
-      LoginResponse (Error _)                -> { m | loading = False }
+      LoginResponse (Error e)                -> { m | loading = False, errorResponse = loginErrorString e}
       CompanyAdd (CompanyAddShow True)       -> { m | loginShow = blankSession model }
       CompanyDel (CompanyDelShow True)       -> { m | loginShow = blankSession model }
       TechAdd (TechAddToggle _)              -> { m | loginShow = blankSession model }
