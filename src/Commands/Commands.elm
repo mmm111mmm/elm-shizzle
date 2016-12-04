@@ -16,19 +16,14 @@ generateCommands input model =
     command =
       case input of
         Login (LoginPress)                    -> loginFn model.loginInput
-        LoginResponse (ValueResponse v)       -> if companyInput.companyAddShow then
-                                                   focusOnHtml "#companyName"
-                                                 else if length techAddInput.techAddBox > 0 then
-                                                   focusOnHtml "#techAdd"
-                                                 else Cmd.none
-        --
+        LoginResponse (ValueResponse v)       -> Cmd.none
         CompanyAdd (CompanyAddPress)          -> addCompany model.session model.companyInput
-        CompanyAdd (CompanyAddShow True)      -> if blankSession model then focusOnHtml "#loginUsername" else Cmd.none
+        CompanyAdd (CompanyAddShow True)      -> Cmd.none
         CompanyAddResponse (Error e)          -> Cmd.none
         CompanyAddResponse (ValueResponse r)  -> fetchCompanies
         --
         CompanyDel (CompanyDelConfirmed s)    -> delCompany model.session s
-        CompanyDel (CompanyDelShow True)      -> if blankSession model then focusOnHtml "#loginUsername" else Cmd.none
+        CompanyDel (CompanyDelShow True)      -> Cmd.none
         CompanyDelResponse (RawError e)       -> Cmd.none
         CompanyDelResponse (RawResponse r)    -> httpResponse1 r (\_ -> fetchCompanies ) (\_ -> Cmd.none )
         --
@@ -41,9 +36,9 @@ generateCommands input model =
         CompanyList (CompanyNext)             -> highlightMarker <| selectModel.id
         --
         TechAdd (TechEnter 13 id)             -> addTech model.session id model.techAddInput
-        TechAdd (TechAddToggle n)             -> if validSession model then focusOnHtml "#techAdd" else focusOnHtml "#loginUsername"
+        TechAdd (TechAddToggle n)             -> Cmd.none
         TechAddResponse (RawError e)          -> Cmd.none
         TechAddResponse (RawResponse r)       -> httpResponse1 r (\_ -> fetchCompanies) (\_ -> Cmd.none )
         _                                     -> Cmd.none
     in
-      Cmd.batch [command, highlightMarker <| selectModel.id ]
+      Cmd.batch [command, highlightMarker <| selectModel.id, focusOnHtml "" ]

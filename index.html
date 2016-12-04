@@ -114,11 +114,16 @@
 
     function focusOn(focusId) {
       window.requestAnimationFrame(function() {
-        var t = document.querySelector(focusId)
-        if(t) {
-          t.focus()
-        } else {
-          console.debug("couldn't focus on "+ focusId)
+        var ts = document.querySelectorAll("[class=focus]")
+        console.debug("found items to focus on ", ts)
+        for(var i = 0; i < ts.length; i++ ) {
+          var t = ts[i]
+          console.debug("found focus item ", t)
+          if(t && t.style.display != "none") {
+            console.debug("request focus on element with focus class", t)
+            t.focus()
+            t.classList.remove('focus')
+          }
         }
       })
     }

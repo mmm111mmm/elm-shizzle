@@ -65,7 +65,7 @@ renderCompanyAdd model =
       , div [id "addCompany"] [
         div []
             [
-              input [ id "companyName",  onInput (Name >> CompanyAdd), type' "text", placeholder "name"] []
+              input [ id "companyName", class "focus", onInput (Name >> CompanyAdd), type' "text", placeholder "name"] []
             ]
         , div []
             [
@@ -92,7 +92,8 @@ renderTech model techAddModel ts companyId =
            input [
              id "techAdd"
              , style [showInput]
-             , placeholder "tech"
+             , placeholder "tech?"
+             , class "focus"
              , type' "text"
              , onInput (TechName >> TechAdd)
              , on "keyup" codeToMsg
