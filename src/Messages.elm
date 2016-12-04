@@ -4,7 +4,6 @@ import Model exposing (..)
 import Utils exposing (ResponseHttp, RawHttp)
 
 type LoginInputData =
-
   Username String
   | Password String
   | LoginPress
@@ -12,7 +11,6 @@ type LoginInputData =
   | LoginShow Bool
 
 type CompanyInputData =
-
   Name String
   | Lat String
   | Lon String
@@ -21,24 +19,19 @@ type CompanyInputData =
   | CompanyAddShow Bool
 
 type TechInputData =
-
   TechAddToggle String
   | TechName String
   | TechEnter Int String
 
 type CompanyListInputData =
-
   CompanySelect String
   | CompanyNext
 
 type CompanyDel =
-
   CompanyDelShow Bool
   | CompanyDelConfirmed String
 
-
 type Msg =
-
   Login LoginInputData
   | LoginResponse (ResponseHttp String)
 

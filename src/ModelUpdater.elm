@@ -18,7 +18,9 @@ updater msg model =
       Login (Password s)                     -> { m | password = s }
       Login (LoginPressInvalid)              -> { m | loginPressInvalid = True }
       Login (LoginShow b)                    -> { m | loginShow = b }
-      LoginResponse (ValueResponse _)        -> { m | loginShow = False }
+      Login (LoginPress)                     -> { m | loading = True }
+      LoginResponse (ValueResponse _)        -> { m | loginShow = False, loading = False }
+      LoginResponse (Error _)                -> { m | loading = False }
       CompanyAdd (CompanyAddShow True)       -> { m | loginShow = blankSession model }
       CompanyDel (CompanyDelShow True)       -> { m | loginShow = blankSession model }
       TechAdd (TechAddToggle _)              -> { m | loginShow = blankSession model }

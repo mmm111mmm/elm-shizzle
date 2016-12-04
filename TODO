@@ -1,5 +1,4 @@
-* box to confirm delete tech
---
-* loading spinner
-* error states
+* error states for login responses
 * edit button
+* focus on tech add after un-focusing
+* bubbling touch events - close add tech by unfocusing

@@ -42,9 +42,10 @@ type alias LoginInputModel = {
   , password : String
   , loginPressInvalid: Bool
   , loginShow: Bool
+  , loading: Bool
 }
 
-initLoginInputModel = LoginInputModel "" "" False False
+initLoginInputModel = LoginInputModel "" "" False False False
 
 type alias TechAddInputModel = {
   techAddBox: String

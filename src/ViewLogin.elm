@@ -23,7 +23,9 @@ renderLogin session model =
             [
               input [ name "password",  placeholder "password", type' "text", onInput (Password >> Login) ] []
             ]
-        , button [ onClick (model |> isPressValid) ] [ text "Login" ]
+        --, div [] [
+        , span [] [ buttonWithSpinner (model |> isPressValid) "Login" model.loading ]
+        --]
       ]
       , div [ style [ displayNoUserPassMessage model ] ] [ text "Please enter a username and password" ]
       , p [] []
