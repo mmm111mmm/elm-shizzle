@@ -27,8 +27,8 @@ findFirstCompany companies =
       Just v -> v.id
       Nothing -> ""
 
-blankSession model =
-  model.session == ""
+blankSession model = model.session == ""
+validSession model = model.session /= ""
 
 httpResponse1 : Http.Response -> (() -> a) -> (() -> a) -> a
 httpResponse1 r success failure =
@@ -58,6 +58,8 @@ type ResponseHttp a =
   | ValueResponse a
 
 
+
+cssBlockOrNone b = if b then ("display","block") else ("display","none")
 pointy      = style [pointerTuple]
 pointerTuple  = ("cursor", "pointer")
 floatLeft   = style [("float", "left"), ("margin-right", "10px")]

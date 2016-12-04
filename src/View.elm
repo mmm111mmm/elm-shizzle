@@ -16,7 +16,7 @@ view model loginInput companyInput companySelect =
     mainContent =
       div [] [
         div [ id "mapid", floatLeft ] []
-        , companyInfoBox companySelect.id model.techAddInput model.companies
+        , companyInfoBox model companySelect.id model.techAddInput model.companies
       ]
   in
     div [] [
@@ -29,7 +29,7 @@ view model loginInput companyInput companySelect =
         span [] []
       ]
 
-companyInfoBox selectedId techAddInput companies =
+companyInfoBox model selectedId techAddInput companies =
   let
     company     = List.filter (\c -> c.id == selectedId) companies |> List.head
     delCompany id = span [ style [("cursor", "pointer")], onClick (id |> CompanyDel) ] [ text " ×" ]
@@ -41,7 +41,7 @@ companyInfoBox selectedId techAddInput companies =
         div [ floatLeft ]
             [ buttonBar
               , h5 [] [ text (c.name), delCompany c.id ]
-              , div [] [ renderTech techAddInput c.technologies c.id ]
+              , div [] [ renderTech model techAddInput c.technologies c.id ]
             ]
       Nothing ->
         div [ floatLeft ] [ buttonBar, text "Try selecting a company" ]
@@ -68,14 +68,15 @@ renderCompanyAdd model =
        ]
       ]
 
-renderTech : TechAddInputModel -> Maybe (List Technology) -> String -> Html Msg
-renderTech techAddModel ts companyId =
+renderTech : Model -> TechAddInputModel -> Maybe (List Technology) -> String -> Html Msg
+renderTech model techAddModel ts companyId =
   let
-    codeToMsg        = Json.map (\k -> TechEnter k companyId |> TechAdd) keyCode
-    del companyId    = span [ style [("cursor", "pointer")], onClick (companyId |> TechDel) ] [ text " ×" ]
-    showTechAdd      = if companyId == techAddModel.techAddBox then ("display","none") else ("display","block")
-    showInput        = if companyId == techAddModel.techAddBox then ("display","block") else ("display","none")
-    techInput techId =
+    codeToMsg          = Json.map (\k -> TechEnter k companyId |> TechAdd) keyCode
+    del companyId      = span [ style [("cursor", "pointer")], onClick (companyId |> TechDel) ] [ text " ×" ]
+    companyIdAndAddBox = companyId == techAddModel.techAddBox
+    showTechAdd        = cssBlockOrNone <| not companyIdAndAddBox || (companyIdAndAddBox && blankSession model)
+    showInput          = cssBlockOrNone <| validSession model && companyIdAndAddBox 
+    techInput techId   =
       div [] [
            input [
              id "techAdd"
@@ -89,8 +90,7 @@ renderTech techAddModel ts companyId =
            , span [
                style [showTechAdd, ("padding", "4px"), ("padding", "4px"), ("font-weight", "bold")]
                , onClick (techId |> TechAddToggle >> TechAdd)
-           ]
-           [ text " +" ]
+           ] [ text " +" ]
       ]
     technologies = case ts of
       Just t  -> List.map (\t -> span [] [code [] [text t.name], del t.id]) t

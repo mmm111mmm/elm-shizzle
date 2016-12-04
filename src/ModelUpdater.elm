@@ -19,7 +19,8 @@ updater msg model =
       Login (LoginPressInvalid)              -> { m | loginPressInvalid = True }
       Login (LoginShow b)                    -> { m | loginShow = b }
       LoginResponse (ValueResponse _)        -> { m | loginShow = False }
-      CompanyAdd (CompanyAddShow True)       -> { m | loginShow = (model.session == "") }
+      CompanyAdd (CompanyAddShow True)       -> { m | loginShow = blankSession model }
+      TechAdd (TechAddToggle _)              -> { m | loginShow = blankSession model }
       _                                      -> m
       -- close company input box on add company reponse
       -- close company input box on login close

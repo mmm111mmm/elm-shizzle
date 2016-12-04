@@ -11,10 +11,16 @@ generateCommands: Msg -> Model -> Cmd Msg
 generateCommands input model =
   let
     selectModel = model.companySelect
+    companyInput = model.companyInput
+    techAddInput = model.techAddInput
     command =
       case input of
         Login (LoginPress)                    -> loginFn model.loginInput
-        LoginResponse (ValueResponse v)       -> focusOnHtml "#companyName"
+        LoginResponse (ValueResponse v)       -> if companyInput.companyAddShow then
+                                                   focusOnHtml "#companyName"
+                                                 else if length techAddInput.techAddBox > 0 then
+                                                   focusOnHtml "#techAdd"
+                                                 else Cmd.none
         --
         CompanyAdd (CompanyAddPress)          -> addCompany model.session model.companyInput
         CompanyAdd (CompanyAddShow True)      -> if blankSession model then focusOnHtml "#loginUsername" else Cmd.none
@@ -34,7 +40,7 @@ generateCommands input model =
         CompanyList (CompanyNext)             -> highlightMarker <| selectModel.id
         --
         TechAdd (TechEnter 13 id)             -> addTech model.session id model.techAddInput
-        TechAdd (TechAddToggle n)             -> if length n > 0 then focusOnHtml "#techAdd" else Cmd.none
+        TechAdd (TechAddToggle n)             -> if validSession model then focusOnHtml "#techAdd" else focusOnHtml "#loginUsername"
         TechAddResponse (RawError e)          -> Cmd.none
         TechAddResponse (RawResponse r)       -> httpResponse1 r (\_ -> fetchCompanies) (\_ -> Cmd.none )
         _                                     -> Cmd.none
