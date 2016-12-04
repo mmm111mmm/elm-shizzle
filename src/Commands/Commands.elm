@@ -27,7 +27,8 @@ generateCommands input model =
         CompanyAddResponse (Error e)          -> Cmd.none
         CompanyAddResponse (ValueResponse r)  -> fetchCompanies
         --
-        CompanyDel s                          -> delCompany model.session s
+        CompanyDel (CompanyDelConfirmed s)    -> delCompany model.session s
+        CompanyDel (CompanyDelShow True)      -> if blankSession model then focusOnHtml "#loginUsername" else Cmd.none
         CompanyDelResponse (RawError e)       -> Cmd.none
         CompanyDelResponse (RawResponse r)    -> httpResponse1 r (\_ -> fetchCompanies ) (\_ -> Cmd.none )
         --

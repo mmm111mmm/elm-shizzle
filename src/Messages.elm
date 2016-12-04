@@ -31,6 +31,12 @@ type CompanyListInputData =
   CompanySelect String
   | CompanyNext
 
+type CompanyDel =
+
+  CompanyDelShow Bool
+  | CompanyDelConfirmed String
+
+
 type Msg =
 
   Login LoginInputData
@@ -39,7 +45,7 @@ type Msg =
   | CompanyAdd CompanyInputData
   | CompanyAddResponse (ResponseHttp Int)
 
-  | CompanyDel String
+  | CompanyDel CompanyDel
   | CompanyDelResponse RawHttp
 
   | TechAdd TechInputData

@@ -20,6 +20,7 @@ updater msg model =
       Login (LoginShow b)                    -> { m | loginShow = b }
       LoginResponse (ValueResponse _)        -> { m | loginShow = False }
       CompanyAdd (CompanyAddShow True)       -> { m | loginShow = blankSession model }
+      CompanyDel (CompanyDelShow True)       -> { m | loginShow = blankSession model }
       TechAdd (TechAddToggle _)              -> { m | loginShow = blankSession model }
       _                                      -> m
       -- close company input box on add company reponse
@@ -32,6 +33,11 @@ updater msg model =
       CompanyAdd (CompanyAddShow b)          -> { m | companyAddShow = b }
       Login (LoginShow False)                -> { m | companyAddShow = False }
       CompanyAddResponse (ValueResponse _)   -> { m | companyAddShow = False }
+      _                                      -> m
+    , companyDel = model.companyDel |> \m -> case msg of
+      CompanyDel (CompanyDelShow b)          -> { m | showBox = b }
+      CompanyDelResponse (RawResponse r)     -> httpResponse1 r (\_ -> { m | showBox = False } ) (\_ -> m )
+      Login (LoginShow False)                -> { m | showBox = False }
       _                                      -> m
     -- company selection set on a company add
     -- company selection removal after a company del

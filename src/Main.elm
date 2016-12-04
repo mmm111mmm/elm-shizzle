@@ -15,8 +15,8 @@ main =
   Html.App.program
     { init =
         (initModel, Cmd.batch [Leaflet.setupLeaflet True, fetchCompanies])
-    , view = \model -> view model model.loginInput model.companyInput model.companySelect
-    , update = \msg model -> 
+    , view = \model -> view model model.loginInput model.companyInput model.companySelect model.companyDel
+    , update = \msg model ->
         let
            updatedModel = updater msg model
            commands     = generateCommands msg updatedModel

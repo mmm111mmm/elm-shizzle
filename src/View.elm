@@ -11,7 +11,7 @@ import Messages exposing (..)
 import Model exposing (..)
 import ViewLogin exposing (..)
 
-view model loginInput companyInput companySelect =
+view model loginInput companyInput companySelect companyDel =
   let
     mainContent =
       div [] [
@@ -25,14 +25,25 @@ view model loginInput companyInput companySelect =
         div [] [ Utils.popup True (renderLogin model.session loginInput) (LoginShow False |> Login) ]
       else if companyInput.companyAddShow then
         div [] [ span [] [], Utils.popup True (renderCompanyAdd model) (CompanyAddShow False |> CompanyAdd) ]
+      else if companyDel.showBox then
+        span [] [ Utils.popup True (deleteCompanyConfirm companySelect.id) (CompanyDelShow False |> CompanyDel) ]
       else
         span [] []
       ]
 
+deleteCompanyConfirm id =
+  div [] [ text "Sure you want to delete the company?"
+           ,div [] [
+             button [ onClick (CompanyDelConfirmed id |> CompanyDel) ] [ text "yup"]
+             , button [ onClick (CompanyDelShow False |> CompanyDel)] [ text "neer"]
+             ]
+          ]
+
+
 companyInfoBox model selectedId techAddInput companies =
   let
     company     = List.filter (\c -> c.id == selectedId) companies |> List.head
-    delCompany id = span [ style [("cursor", "pointer")], onClick (id |> CompanyDel) ] [ text " ×" ]
+    delCompany id = span [ style [("cursor", "pointer")], onClick (CompanyDelShow True |> CompanyDel) ] [ text " ×" ]
     buttonBar = div [] [ button [ onClick (CompanyNext |> CompanyList) ] [ text "next" ]
                          , button [ onClick (CompanyAddShow True |> CompanyAdd) ] [ text "add" ] ]
   in
@@ -75,7 +86,7 @@ renderTech model techAddModel ts companyId =
     del companyId      = span [ style [("cursor", "pointer")], onClick (companyId |> TechDel) ] [ text " ×" ]
     companyIdAndAddBox = companyId == techAddModel.techAddBox
     showTechAdd        = cssBlockOrNone <| not companyIdAndAddBox || (companyIdAndAddBox && blankSession model)
-    showInput          = cssBlockOrNone <| validSession model && companyIdAndAddBox 
+    showInput          = cssBlockOrNone <| validSession model && companyIdAndAddBox
     techInput techId   =
       div [] [
            input [

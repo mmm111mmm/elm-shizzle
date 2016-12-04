@@ -7,12 +7,13 @@ type alias Model = {
   session:      String
   , loginInput:   LoginInputModel
   , companyInput: CompanyInputModel
+  , companyDel : CompanyDelModel
   , techAddInput: TechAddInputModel
   , companySelect: CompanySelectModel
   , companies:    List Company
 }
 
-initModel = Model "" initLoginInputModel initCompanyInputModel initTechAddInput initCompanySelectModel []
+initModel = Model "" initLoginInputModel initCompanyInputModel initCompanyDelModel initTechAddInput initCompanySelectModel []
 
 type alias CompanyInputModel = {
   name: String
@@ -23,6 +24,12 @@ type alias CompanyInputModel = {
 }
 
 initCompanyInputModel = CompanyInputModel "" "0" "0" "" False
+
+type alias CompanyDelModel = {
+  showBox: Bool
+}
+
+initCompanyDelModel = CompanyDelModel False
 
 type alias CompanySelectModel = {
   id : String
