@@ -13,6 +13,8 @@ generateCommands input model companySelect =
       case input of
         Login (LoginPress)                    -> loginFn model.loginInput
         LoginResponse (ValueResponse v)       -> Cmd.none
+        LoginResponse (Error _)               -> focusOnHtmlId ("#loginUsername")
+        --
         CompanyAdd (CompanyAddPress)          -> addCompany model.session model.companyInput
         CompanyAdd (CompanyAddShow True)      -> Cmd.none
         CompanyAddResponse (Error e)          -> Cmd.none

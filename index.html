@@ -129,16 +129,25 @@
       window.requestAnimationFrame(function() {
         //var activeFocus = document.activeElement
         //if(activeFocus && activeFocus.tagName.toLowerCase()=="input") return
-        var ts = document.querySelectorAll("[class=focus]")
-        console.debug("found items to focus on ", ts)
+        var ts = document.querySelectorAll(".focus")
         for(var i = 0; i < ts.length; i++ ) {
           var t = ts[i]
-          console.debug("found focus item ", t)
           if(t && t.style.display != "none") {
             console.debug("request focus on element with focus class", t)
             t.focus()
             t.classList.remove('focus')
           }
+        }
+      })
+    }
+
+    app.ports.focusOnHtmlId.subscribe(focusOnId);
+
+    function focusOnId(focusId) {
+      window.requestAnimationFrame(function() {
+        var t = document.querySelector(focusId)
+        if(t && t.style.display != "none") {
+          t.focus()
         }
       })
     }
