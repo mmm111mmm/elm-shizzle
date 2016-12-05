@@ -29,25 +29,22 @@ renderLogin session model =
       , p [] []
       ]
 
-displayNoUserPassMessage : LoginInputModel -> (String,String)
-displayNoUserPassMessage model =
-  if not (model.username == "" && model.password == "") && eitherLoginOrPassEmpty model then
+displayNoUserPassMessage {username, password} =
+  if not (username == "" && password == "") && (eitherLoginOrPassEmpty username password) then
     ("display", "block")
   else
     ("display", "none")
 
-isPressValid : LoginInputModel -> Msg
-isPressValid model =
-  if eitherLoginOrPassEmpty model then
+isPressValid {username, password} =
+  if eitherLoginOrPassEmpty username password then
     LoginPressInvalid |> Login
   else
     LoginPress |> Login
 
-eitherLoginOrPassEmpty : LoginInputModel -> Bool
-eitherLoginOrPassEmpty model =
+eitherLoginOrPassEmpty username password =
   let
-    userLength = trim model.username |> length
-    passLength = trim model.password |> length
+    userLength = trim username |> length
+    passLength = trim password |> length
     empty      = userLength == 0 || passLength == 0
   in
     empty

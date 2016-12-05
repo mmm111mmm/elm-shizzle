@@ -13,7 +13,7 @@ generateCommands input model companySelect =
       case input of
         Login (LoginPress)                    -> loginFn model.loginInput
         LoginResponse (ValueResponse v)       -> Cmd.none
-        LoginResponse (Error _)               -> focusOnHtmlId ("#loginUsername")
+        LoginResponse (Error _)               -> focusOnHtmlId "#loginUsername"
         --
         CompanyAdd (CompanyAddPress)          -> addCompany model.session model.companyInput
         CompanyAdd (CompanyAddShow True)      -> Cmd.none
@@ -34,7 +34,7 @@ generateCommands input model companySelect =
         CompanyList (CompanyNext)             -> highlightMarker <| companySelect.id
         --
         TechAdd (TechEnter 13 id)             -> addTech model.session id model.techAddInput
-        TechAdd (TechAddToggle n)             -> Cmd.none
+        TechAdd (TechAddToggle n)             -> if validSession model then focusOnHtmlId "#techAdd" else Cmd.none
         TechAddResponse (RawError e)          -> Cmd.none
         TechAddResponse (RawResponse r)       -> httpResponse1 r (\_ -> fetchCompanies) (\_ -> Cmd.none )
         _                                     -> Cmd.none
