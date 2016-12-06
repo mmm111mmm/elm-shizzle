@@ -14,21 +14,21 @@ import ViewLogin exposing (..)
 view model loginInput companyInput companySelect companyDel =
   let
     mainContent =
-      div [] [
-        div [ id "mapid", floatLeft ] []
-        , companyInfoBox model companySelect.id model.techAddInput model.companies
+      div [ style [("display", "flex"), ("flex-direction", "row")] ] [
+        div [ id "mapid" ] []
+        , span [ style [("padding-left", "8px")] ] [ companyInfoBox model companySelect.id model.techAddInput model.companies]
       ]
   in
     div [] [
-      mainContent
-      , if loginInput.loginShow then
-        div [] [ Utils.popup True (renderLogin model.session loginInput) (LoginShow False |> Login) ]
+      if loginInput.loginShow then
+        Utils.popup True (renderLogin model.session loginInput) (LoginShow False |> Login)
       else if companyInput.companyAddShow then
-        div [] [ span [] [], Utils.popup True (renderCompanyAdd model) (CompanyAddShow False |> CompanyAdd) ]
+        Utils.popup True (renderCompanyAdd model) (CompanyAddShow False |> CompanyAdd)
       else if companyDel.showBox then
-        span [] [ Utils.popup True (deleteCompanyConfirm companySelect.id) (CompanyDelShow False |> CompanyDel) ]
+        Utils.popup True (deleteCompanyConfirm companySelect.id) (CompanyDelShow False |> CompanyDel)
       else
         span [] []
+      , mainContent
       ]
 
 deleteCompanyConfirm id =
@@ -49,7 +49,7 @@ companyInfoBox model selectedId techAddInput companies =
   in
     case company of
       Just c ->
-        div [ floatLeft ]
+        div [ ]
             [ buttonBar
               , div [] [
                 h5 [ style [("display", "inline-block")] ] [ text (c.name) ]
@@ -59,7 +59,7 @@ companyInfoBox model selectedId techAddInput companies =
               , div [] [ renderTech model techAddInput c.technologies c.id ]
             ]
       Nothing ->
-        div [ floatLeft ] [ buttonBar, text "Try selecting a company" ]
+        div [ ] [ buttonBar, text "Try selecting a company" ]
 
 
 showOnEdit model html =
