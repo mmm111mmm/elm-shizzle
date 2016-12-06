@@ -7,6 +7,7 @@ import Json.Decode as Json exposing (..)
 import Messages exposing (..)
 import Utils exposing (..)
 import Model exposing (..)
+import Json.Encode as JsonEncode
 
 companyList: (Http.Error -> a) -> (List Company -> a) -> Cmd a
 companyList errorType successType =
@@ -114,3 +115,16 @@ decodeCompanies =
       titem = Json.object2 Technology ("id" := Json.string) ("name" := Json.string)
   in
     "companies" := comps
+
+encodeCompanies : List Company -> String
+encodeCompanies cs =
+  let
+    maps =
+      List.map (\c ->
+        JsonEncode.object
+          [ ("id", JsonEncode.string c.id)
+            , ("lat", JsonEncode.string c.lat)
+            , ("lon", JsonEncode.string c.lon)
+          ]) cs
+    in
+      JsonEncode.encode 0 <| JsonEncode.list maps

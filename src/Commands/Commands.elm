@@ -30,8 +30,8 @@ generateCommands input model companySelect =
         TechDelResponse (RawResponse r)       -> httpResponse1 r (\_ -> fetchCompanies ) (\_ -> Cmd.none )
         --
         CompanyListResponse (Error e)         -> Cmd.none
-        CompanyListResponse (ValueResponse c) -> addLeafletPins (c, companySelect.id)
-        CompanyList (CompanyNext)             -> highlightMarker <| companySelect.id
+        CompanyListResponse (ValueResponse c) -> Cmd.none
+        CompanyList (CompanyNext)             -> Cmd.none
         --
         TechAdd (TechEnter 13 id)             -> addTech model.session id model.techAddInput
         TechAdd (TechAddToggle n)             -> if validSession model then focusOnHtmlId "#techAdd" else Cmd.none
@@ -39,4 +39,4 @@ generateCommands input model companySelect =
         TechAddResponse (RawResponse r)       -> httpResponse1 r (\_ -> fetchCompanies) (\_ -> Cmd.none )
         _                                     -> Cmd.none
     in
-      Cmd.batch [ command, highlightMarker <| companySelect.id, focusOnHtml "" ]
+      Cmd.batch [ command, focusOnHtml "" ]

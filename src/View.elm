@@ -5,17 +5,19 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Json.Decode as Json
+import Json.Encode as JsonEncode
 
 import Utils exposing (..)
 import Messages exposing (..)
 import Model exposing (..)
 import ViewLogin exposing (..)
+import Commands.Requests exposing (..)
 
 view model loginInput companyInput companySelect companyDel =
   let
     mainContent =
       div [ style [("display", "flex"), ("flex-direction", "row")] ] [
-        div [ id "mapid" ] []
+        div [ id "mapid", attribute "companyselected" companySelect.id, attribute "pins" <| encodeCompanies model.companies ] []
         , span [ style [("padding-left", "8px")] ] [ companyInfoBox model companySelect.id model.techAddInput model.companies]
       ]
   in
