@@ -43,7 +43,7 @@ deleteCompanyConfirm id =
 companyInfoBox model selectedId techAddInput companies =
   let
     company     = List.filter (\c -> c.id == selectedId) companies |> List.head
-    delCompany id = span [ style [("cursor", "pointer")], onClick (CompanyDelShow True |> CompanyDel) ] [ text " ×" ]
+    delCompany id = showOnEdit model <| span [ style [ pointerTuple ], onClick (CompanyDelShow True |> CompanyDel) ] [ text " ×" ]
     buttonBar = div [] [ button [ onClick (CompanyNext |> CompanyList) ] [ text "next" ]
                          , button [ onClick (CompanyAddShow True |> CompanyAdd) ] [ text "add" ] ]
   in
@@ -51,12 +51,22 @@ companyInfoBox model selectedId techAddInput companies =
       Just c ->
         div [ floatLeft ]
             [ buttonBar
-              , h5 [] [ text (c.name), delCompany c.id ]
+              , div [] [
+                h5 [ style [("display", "inline-block")] ] [ text (c.name) ]
+                , delCompany c.id
+                , span [ style [ pointerTuple], onClick (CompanyEdit <| not model.companyEdit ) ] [ text " edit" ]
+              ]
               , div [] [ renderTech model techAddInput c.technologies c.id ]
             ]
       Nothing ->
         div [ floatLeft ] [ buttonBar, text "Try selecting a company" ]
 
+
+showOnEdit model html =
+  if model.companyEdit && validSession model then
+    html
+  else
+    span [ style [("visibility", "hidden")] ] [ html ]
 
 renderCompanyAdd : Model -> Html Msg
 renderCompanyAdd model =
@@ -83,7 +93,7 @@ renderTech : Model -> TechAddInputModel -> Maybe (List Technology) -> String -> 
 renderTech model techAddModel ts companyId =
   let
     codeToMsg          = Json.map (\k -> TechEnter k companyId |> TechAdd) keyCode
-    del companyId      = span [ style [("cursor", "pointer")], onClick (companyId |> TechDel) ] [ text " ×" ]
+    del companyId      = showOnEdit model <| span [ style [("cursor", "pointer")], onClick (companyId |> TechDel) ] [ text " ×" ]
     companyIdAndAddBox = companyId == techAddModel.techAddBox
     showTechAdd        = cssBlockOrNone <| not companyIdAndAddBox || (companyIdAndAddBox && blankSession model)
     showInput          = cssBlockOrNone <| validSession model && companyIdAndAddBox
@@ -99,7 +109,7 @@ renderTech model techAddModel ts companyId =
              , on "keyup" codeToMsg
              , value techAddModel.name
            ] [ ]
-           , span [
+           , showOnEdit model <| span [
                style [showTechAdd, ("padding", "4px"), ("padding", "4px"), ("font-weight", "bold")]
                , onClick (techId |> TechAddToggle >> TechAdd)
            ] [ text " +" ]

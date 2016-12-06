@@ -1,11 +1,11 @@
 module ViewLogin exposing (renderLogin)
 
 import Html exposing (..)
-import Html.Events exposing (onClick, onInput)
+import Html.Events exposing (..)
 import Html.Attributes exposing (..)
 import Model exposing (..)
 import Messages exposing (..)
-import String exposing (trim, length)
+import String exposing (..)
 import Utils exposing (..)
 
 renderLogin: String -> LoginInputModel -> Html Msg

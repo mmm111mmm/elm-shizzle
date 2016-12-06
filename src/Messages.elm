@@ -49,3 +49,5 @@ type Msg =
 
   | CompanyList CompanyListInputData
   | CompanyListResponse (ResponseHttp (List Company))
+
+  | CompanyEdit Bool

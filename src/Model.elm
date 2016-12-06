@@ -4,16 +4,17 @@ import Json.Decode as Json exposing (..)
 import Html exposing (..)
 
 type alias Model = {
-  session:      String
-  , loginInput:   LoginInputModel
-  , companyInput: CompanyInputModel
-  , companyDel : CompanyDelModel
-  , techAddInput: TechAddInputModel
+  session:         String
+  , loginInput:    LoginInputModel
+  , companyInput:  CompanyInputModel
+  , companyDel :   CompanyDelModel
+  , techAddInput:  TechAddInputModel
   , companySelect: CompanySelectModel
-  , companies:    List Company
+  , companies:     List Company
+  , companyEdit:   Bool
 }
 
-initModel = Model "" initLoginInputModel initCompanyInputModel initCompanyDelModel initTechAddInput initCompanySelectModel []
+initModel = Model "" initLoginInputModel initCompanyInputModel initCompanyDelModel initTechAddInput initCompanySelectModel [] False
 
 type alias CompanyInputModel = {
   name: String

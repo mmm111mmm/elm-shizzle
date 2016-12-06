@@ -24,6 +24,7 @@ updater msg model =
       LoginResponse (Error e)                -> { m | loading = False, errorResponse = loginErrorString e}
       CompanyAdd (CompanyAddShow True)       -> { m | loginShow = blankSession model }
       CompanyDel (CompanyDelShow True)       -> { m | loginShow = blankSession model }
+      CompanyEdit True                       -> { m | loginShow = blankSession model }
       TechAdd (TechAddToggle _)              -> { m | loginShow = blankSession model }
       _                                      -> m
       -- close company input box on add company reponse
@@ -65,5 +66,9 @@ updater msg model =
       TechAdd (TechAddToggle num)            -> { m | techAddBox = num }
       TechAdd (TechEnter 27 _)               -> { m | techAddBox = "" }
       TechAddResponse (RawResponse r)        -> httpResponse1 r (\_ -> { m | name = "", techAddBox = "" }) (\_ -> m )
+      _                                      -> m
+    , companyEdit = model.companyEdit |> \m -> case msg of
+      CompanyEdit b                          -> b
+      Login (LoginShow False)                -> False
       _                                      -> m
     }
