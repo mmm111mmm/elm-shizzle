@@ -2,7 +2,7 @@ module Main exposing (..)
 
 import Html.App
 
-import Commands.Leaflet as Leaflet
+import Commands.Ports as Ports
 import Commands.Commands exposing (..)
 import Commands.Requests exposing (..)
 import View exposing (..)
@@ -14,7 +14,7 @@ main : Program Never
 main =
   Html.App.program
     { init =
-        (initModel, Cmd.batch [Leaflet.setupLeaflet True, fetchCompanies])
+        (initModel, Cmd.batch [fetchCompanies])
     , view = \model -> view model model.loginInput model.companyInput model.companySelect model.companyDel
     , update = \msg model ->
         let
@@ -24,5 +24,5 @@ main =
         in
           ( updatedModel, commands )
     , subscriptions = \_ ->
-        Leaflet.companyClick (CompanySelect >> CompanyList)
+        Ports.companyClick (CompanySelect >> CompanyList)
     }

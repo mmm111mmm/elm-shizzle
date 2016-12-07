@@ -56,9 +56,14 @@
     var oldSelected = 0
     var mymap;
 
-    app.ports.setupLeaflet.subscribe(setupLeaflet);
+    var bodyObserver = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        setupLeaflet()
+        this.disconnect()
+      }.bind(this));
+    }).observe(document.querySelector("#main"), { attributes: true, childList: true, characterData: true });
 
-    function setupLeaflet(b) {
+    function setupLeaflet() {
       mymap = L.map('mapid', {
         center: [53.483873, -2.237027],
         zoom: 13
@@ -85,7 +90,6 @@
           console.log(name, value);
         });
       }).observe(target, { attributes: true, childList: true, characterData: true });
-
     }
 
     function highlightMarker(arg) {
@@ -130,8 +134,6 @@
 
     function focusOn(focusId) {
       window.requestAnimationFrame(function() {
-        //var activeFocus = document.activeElement
-        //if(activeFocus && activeFocus.tagName.toLowerCase()=="input") return
         var ts = document.querySelectorAll(".focus")
         for(var i = 0; i < ts.length; i++ ) {
           var t = ts[i]

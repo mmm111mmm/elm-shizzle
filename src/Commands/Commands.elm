@@ -3,7 +3,7 @@ module Commands.Commands exposing (..)
 import Model exposing (..)
 import Messages exposing (..)
 import Commands.Requests exposing (..)
-import Commands.Leaflet exposing (..)
+import Commands.Ports exposing (..)
 import Utils exposing (..)
 import String exposing (..)
 
